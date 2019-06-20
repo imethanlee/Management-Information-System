@@ -68,6 +68,12 @@ def set_cell_value(event, treeview, editcol=None):  # 双击进入编辑状态
     def saveedit():
         treeview.set(item, column=column, value=entryedit.get(0.0, "end"))
         # Update to database
+        cid = item_text[0]
+        sid = item_text[2]
+        new_val = entryedit.get(0.0, "end")
+        sql = 'update coursechoosing set score='+new_val+' where courseID="'+cid+'" ' \
+              'and studentID="'+sid+'"'
+        sql_conn(sql)
 
         entryedit.destroy()
         okb1.destroy()

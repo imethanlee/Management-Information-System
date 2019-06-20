@@ -22,7 +22,7 @@ class TeacherPage(object):
         clear_frame(self.page)
         Label(self.page).grid(row=0, stick=W)
         # get data from database
-        sql = 'select * from teacher where teacher.teacherID="'+GlobalVar.login_id+'"'
+        sql = 'select * from teacher where teacher.teacherID="' + GlobalVar.login_id + '"'
         db_fetch = sql_conn(sql)[0]
 
         # ID, Name, Sex, Entrance Age, Entrance Year, Class, Grade [7]
@@ -38,6 +38,16 @@ class TeacherPage(object):
         columns = ('Course ID', 'Course Name', 'Credit', 'Course Grade', 'Canceled Year')
         table = generate_table(self.page, 4, columns)
         # course_data()
+        # get data from database
+        sql = 'select course.courseID, course.name, course.credit, course.grade, course.canceledYear' \
+              ' from teacher, course where teacher.teacherID="' + GlobalVar.login_id + '"' + ' and ' \
+              'teacher.teacherID=course.teacherID'
+        db_fetch = sql_conn(sql)
+
+        for i in range(len(db_fetch)):
+            table.insert('', i, values=(db_fetch[i][0], db_fetch[i][1],
+                                        db_fetch[i][2], db_fetch[i][3],
+                                        db_fetch[i][4]))
 
         self.page.pack()
 
@@ -47,9 +57,19 @@ class TeacherPage(object):
 
         columns = ('Course ID', 'Course Name', 'Student ID', 'Student Name', 'Chosen Year', 'Score')
         table = generate_table(self.page, 1, columns)
-        table.insert('', 0, values=('001', 'CN', '666', 'lly', '2018', '100'))
+        #table.insert('', 0, values=('001', 'CN', '666', 'lly', '2018', '100'))
         table.bind(sequence='<Double-1>', func=handler_adaptor(set_cell_value, treeview=table, editcol=6))
         # scores_data()
+        # get data from database
+        sql = 'select course.courseID, course.name, student.studentID, student.name, coursechoosing.chosenYear,' \
+              'coursechoosing.score from course, student, coursechoosing where coursechoosing.teacherID="'+GlobalVar.login_id+'" ' \
+              'and course.courseID=coursechoosing.courseID and student.studentID=coursechoosing.studentID'
+        db_fetch = sql_conn(sql)
+        for i in range(len(db_fetch)):
+            table.insert('', i, values=(db_fetch[i][0], db_fetch[i][1],
+                                        db_fetch[i][2], db_fetch[i][3],
+                                        db_fetch[i][4], db_fetch[i][5]))
+
 
         query_fram = Frame(self.page)
         query_fram.grid(row=2, stick=W, ipady=10, ipadx=10)
