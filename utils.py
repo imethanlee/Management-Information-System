@@ -46,22 +46,39 @@ def generate_table(root, gird_row, columns):
     return table
 
 
-def set_cell_value(event, treeview, root):  # 双击进入编辑状态
+def handler_adaptor(fun, **kwds):
+    """事件处理函数的适配器，相当于中介，那个event是从那里来的呢，我也纳闷，这也许就是python的伟大之处吧"""
+    return lambda event, fun=fun, kwds=kwds: fun(event, **kwds)
+
+
+def set_cell_value(event, treeview, editcol=None):  # 双击进入编辑状态
     for item in treeview.selection():
-        # item = I001
         item_text = treeview.item(item, "values")
-        # print(item_text[0:2])  # 输出所选行的值
     column = treeview.identify_column(event.x)  # 列
     row = treeview.identify_row(event.y)  # 行
     cn = int(str(column).replace('#', ''))
     rn = int(str(row).replace('I', ''))
-    entryedit = Text(root, width=10 + (cn - 1) * 16, height=1)
-    entryedit.place(x=16 + (cn - 1) * 130, y=6 + rn * 20)
+
+    if editcol != cn:
+        return
+
+    entryedit = Text(treeview, width=20, height=1)
+    entryedit.place(x=(cn - 1) * 150, y=6 + rn * 20)
 
     def saveedit():
         treeview.set(item, column=column, value=entryedit.get(0.0, "end"))
-        entryedit.destroy()
-        okb.destroy()
+        # Update to database
 
-    okb = ttk.Button(root, text='OK', width=4, command=saveedit)
-    okb.place(x=90 + (cn - 1) * 242, y=2 + rn * 20)
+        entryedit.destroy()
+        okb1.destroy()
+        okb2.destroy()
+
+    def quitedit():
+        entryedit.destroy()
+        okb1.destroy()
+        okb2.destroy()
+
+    okb1 = ttk.Button(treeview, text='OK', width=3, command=saveedit)
+    okb1.place(x=(cn - 1) * 150 + 85, y=2 + rn * 20)
+    okb2 = ttk.Button(treeview, text='Quit', width=4, command=quitedit)
+    okb2.place(x=(cn - 1) * 150 + 115, y=2 + rn * 20)

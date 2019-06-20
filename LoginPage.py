@@ -22,8 +22,7 @@ class LoginPage(object):
         Label(self.page, text='I AM ', font=("Arial", 16)).grid(row=1, stick=W, pady=10)
 
         user_type = ['student', 'teacher', 'admin']
-        v = StringVar()
-        v.set('student')
+        self.usertype.set('student')
         for i in range(3):
             Radiobutton(self.page, variable=self.usertype, text=user_type[i], value=user_type[i],
                         font=("Arial", 12)).grid(row=2, column=i, pady=10)
