@@ -1,6 +1,11 @@
 import pymysql
 
 
+class GlobalVar:
+    def __init__(self):
+        self.login_id = 0
+
+
 def center_window(root, width, height):
     screenwidth = root.winfo_screenwidth()
     screenheight = root.winfo_screenheight()

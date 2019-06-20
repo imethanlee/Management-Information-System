@@ -36,17 +36,17 @@ class LoginPage(object):
         Button(self.page, text='Exit', command=self.page.quit, font=("Arial", 12)).grid(row=5, column=1, stick=E)
 
     def login_check(self):
-        print(self.usertype.get())
         type = self.usertype.get()
         name = self.username.get()
         secret = self.password.get()
-        s = 'select * from user where user.username="'+name+'' \
+        sql = 'select * from user where user.username="'+name+'' \
             '" and user.password="'+secret+'' \
             '" and user.usertype="'+type+'"'
 
-        db_fetch = sql_conn(s)
+        db_fetch = sql_conn(sql)
 
         if len(db_fetch) != 0:
+            GlobalVar.login_id = name
             self.page.destroy()
             if type == 'student':
                 StudentPage(self.root)

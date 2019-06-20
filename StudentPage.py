@@ -23,10 +23,14 @@ class StudentPage(object):
     def home_page(self):
         clear_frame(self.page)
         Label(self.page).grid(row=0, stick=W)
+        # get data from database
+        sql = 'select * from student where student.studentID="'+GlobalVar.login_id+'"'
+        db_fetch = sql_conn(sql)[0]
+        print(db_fetch)
 
         # ID, Name, Sex, Entrance Age, Entrance Year, Class, Grade [7]
         info_head = ['ID', 'Name', 'Sex', 'Entrance Age', 'Entrance Year', 'Class', 'Grade']
-        student_info = ['000001', 'Tom Jack', 'Male', '18', '2008', 'Class 1', 'Grade']
+        student_info = [db_fetch[0], db_fetch[1], db_fetch[2], db_fetch[3], db_fetch[4], db_fetch[5], 'Grade']
         # student_info[6] = currentYear - Entrance Year
 
         Label(self.page, text='Hello, Student {}!'.format(student_info[1]), font=("Arial", 16)).grid(row=1, stick=W,
@@ -38,8 +42,15 @@ class StudentPage(object):
         self.page.pack()
 
     def courses_page(self):
+
         clear_frame(self.page)
         Label(self.page).grid(row=0, stick=W)
+
+        # get data from database
+        sql = 'select course.name, teacher.name, course.credit, course.grade, course.canceledYear from ' \
+              'course, teacher, coursechoosing where coursechoosing.studentID="'+GlobalVar.login_id+'" and ' \
+              'teacher.teacherID=coursechoosing.teacherID and course.courseID=coursechoosing.courseID'
+        db_fetch = sql_conn(sql)
 
         columns = ('Course Name', 'Teacher Name', 'Credit', 'Course Grade', 'Canceled Year')
         table = Treeview(self.page, height=14, show="headings", columns=columns)
@@ -54,12 +65,21 @@ class StudentPage(object):
         vbar.grid(row=1, column=1, sticky=NS)
 
         # course_data()
-
+        for i in range(len(db_fetch)):
+            table.insert('', i, values=(db_fetch[i][0], db_fetch[i][1],
+                                        db_fetch[i][2], db_fetch[i][3],
+                                        db_fetch[i][4]))
         self.page.pack()
 
     def scores_page(self):
         clear_frame(self.page)
         Label(self.page).grid(row=0, stick=W)
+
+        # get data from database
+        sql = 'select course.name, teacher.name, course.credit, course.grade, coursechoosing.chosenYear, coursechoosing.score from ' \
+              'course, teacher, coursechoosing where coursechoosing.studentID="'+GlobalVar.login_id+'" and ' \
+              'teacher.teacherID=coursechoosing.teacherID and course.courseID=coursechoosing.courseID'
+        db_fetch = sql_conn(sql)
 
         columns = ('Course Name', 'Teacher Name', 'Credit', 'Course Grade', 'Chosen Year', 'Score')
         table = Treeview(self.page, height=14, show="headings", columns=columns)
@@ -74,9 +94,15 @@ class StudentPage(object):
         vbar.grid(row=1, column=1, sticky=NS)
 
         # scores_data()
+        avg = 0.0
+        for i in range(len(db_fetch)):
+            table.insert('', i, values=(db_fetch[i][0], db_fetch[i][1],
+                                        db_fetch[i][2], db_fetch[i][3],
+                                        db_fetch[i][4], db_fetch[i][5]))
+            avg += db_fetch[i][5] / len(db_fetch)
 
         Label(self.page, text='Average Score: ', font=("Arial", 12)).grid(row=2, stick=E, pady=10)
-        Label(self.page, text='{}'.format('ave'), font=("Arial", 12)).grid(row=2, column=1, stick=W, pady=10)
+        Label(self.page, text='{}'.format(avg), font=("Arial", 12)).grid(row=2, column=1, stick=W, pady=10)
         self.page.pack()
 
 
