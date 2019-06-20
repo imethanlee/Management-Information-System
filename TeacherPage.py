@@ -27,6 +27,7 @@ class TeacherPage(object):
 
         # ID, Name, Sex, Entrance Age, Entrance Year, Class, Grade [7]
         info_head = ['ID', 'Name']
+        teacher_info = [db_fetch[0], db_fetch[1]]
 
         Label(self.page, text='Hello, Teacher {}!'.format(teacher_info[1]), font=("Arial", 16)).grid(row=1, stick=W,
                                                                                                      pady=10)
@@ -56,8 +57,9 @@ class TeacherPage(object):
 
         columns = ('Course ID', 'Course Name', 'Student ID', 'Student Name', 'Chosen Year', 'Score')
         table = generate_table(self.page, 1, columns)
-        #table.insert('', 0, values=('001', 'CN', '666', 'lly', '2018', '100'))
-        table.bind(sequence='<Double-1>', func=handler_adaptor(set_cell_value, treeview=table, editcol=6))
+        # table.insert('', 0, values=('001', 'CN', '666', 'lly', '2018', '100'))
+        table.bind(sequence='<Double-1>', func=handler_adaptor(set_cell_value,
+                                                               treeview=table, scene='teacher_score', editcol=6))
         # scores_data()
         # get data from database
         sql = 'select course.courseID, course.name, student.studentID, student.name, coursechoosing.chosenYear,' \
@@ -69,23 +71,22 @@ class TeacherPage(object):
                                         db_fetch[i][2], db_fetch[i][3],
                                         db_fetch[i][4], db_fetch[i][5]))
 
-
-        query_fram = Frame(self.page)
-        query_fram.grid(row=2, stick=W, ipady=10, ipadx=10)
-        Label(query_fram, text='Student ID: ', font=("Arial", 16)).grid(row=0, stick=E + W, pady=10)
-        Text(query_fram, font=("Arial", 16), width=20, height=1).grid(row=0, column=1, stick=E + W, pady=10)
-        Label(query_fram, text=' / Student Name: ', font=("Arial", 16)).grid(row=0, column=2, stick=E + W, pady=10)
-        Text(query_fram, font=("Arial", 16), width=20, height=1).grid(row=0, column=3, stick=E + W, pady=10)
-        Label(query_fram, text='Course ID: ', font=("Arial", 16)).grid(row=1, stick=E + W, pady=10)
-        Text(query_fram, font=("Arial", 16), width=20, height=1).grid(row=1, column=1, stick=E + W, pady=10)
-        Label(query_fram, text=' / Course Name: ', font=("Arial", 16)).grid(row=1, column=2, stick=E + W, pady=10)
-        Text(query_fram, font=("Arial", 16), width=20, height=1).grid(row=1, column=3, stick=E + W, pady=10)
+        query_frame = Frame(self.page)
+        query_frame.grid(row=2, stick=W, ipady=10, ipadx=10)
+        Label(query_frame, text='Student ID: ', font=("Arial", 16)).grid(row=0, stick=E + W, pady=10)
+        Text(query_frame, font=("Arial", 16), width=20, height=1).grid(row=0, column=1, stick=E + W, pady=10)
+        Label(query_frame, text=' / Student Name: ', font=("Arial", 16)).grid(row=0, column=2, stick=E + W, pady=10)
+        Text(query_frame, font=("Arial", 16), width=20, height=1).grid(row=0, column=3, stick=E + W, pady=10)
+        Label(query_frame, text='Course ID: ', font=("Arial", 16)).grid(row=1, stick=E + W, pady=10)
+        Text(query_frame, font=("Arial", 16), width=20, height=1).grid(row=1, column=1, stick=E + W, pady=10)
+        Label(query_frame, text=' / Course Name: ', font=("Arial", 16)).grid(row=1, column=2, stick=E + W, pady=10)
+        Text(query_frame, font=("Arial", 16), width=20, height=1).grid(row=1, column=3, stick=E + W, pady=10)
 
         score_exist = BooleanVar()
-        Radiobutton(query_fram, variable=score_exist, text='No scores', value=True,
+        Radiobutton(query_frame, variable=score_exist, text='No scores', value=True,
                     font=("Arial", 16)).grid(row=2, column=0, pady=10)
-        Button(query_fram, text='Search', command='updateFunction', font=("Arial", 16)).grid(row=2, column=2, stick=W,
-                                                                                             pady=10)
+        Button(query_frame, text='Search', command='updateFunction',
+               font=("Arial", 16)).grid(row=2, column=2, stick=W, pady=10)
 
         self.page.pack()
 
