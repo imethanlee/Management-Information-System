@@ -9,6 +9,11 @@ def center_window(root, width, height):
     root.geometry(size)
 
 
+def clear_frame(root):
+    for widget in root.winfo_children():
+        widget.destroy()
+
+
 def sql_conn(sql):
     db = pymysql.connect("localhost", "root", "46281234", "mis")
     cursor = db.cursor()

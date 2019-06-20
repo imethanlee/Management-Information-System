@@ -1,13 +1,15 @@
 from tkinter import *
 from tkinter.messagebox import *
 from utils import *
+from StudentPage import StudentPage
+from TeacherPage import TeacherPage
+from AdminPage import AdminPage
 
 
 class LoginPage(object):
     def __init__(self, master=None):
         self.root = master  # 定义内部变量root
-        # self.root.geometry('%dx%d' % (500, 380))  # 设置窗口大小
-        center_window(root, 500, 309)
+        center_window(self.root, 500, 309)
         self.username = StringVar()
         self.password = StringVar()
         self.usertype = StringVar()
@@ -46,7 +48,12 @@ class LoginPage(object):
 
         if len(db_fetch) != 0:
             self.page.destroy()
-            # MainPage(self.root)
+            if type == 'student':
+                StudentPage(self.root)
+            elif type == 'teacher':
+                TeacherPage(self.root)
+            elif type == 'admin':
+                AdminPage(self.root)
         else:
             showinfo(title='Login error', message='ID or password incorrect')
 
