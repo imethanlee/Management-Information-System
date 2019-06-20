@@ -1,5 +1,6 @@
 from tkinter import *
 from tkinter.messagebox import *
+from tkinter import ttk
 from tkinter.ttk import Treeview
 from utils import *
 
@@ -46,8 +47,14 @@ class StudentPage(object):
             table.column(columns[i], width=150, anchor='center')
             table.heading(columns[i], text=columns[i])
 
+        # ----vertical scrollbar------------
+        vbar = ttk.Scrollbar(self.page, orient=VERTICAL, command=table.yview)
+        table.configure(yscrollcommand=vbar.set)
         table.grid(row=1, sticky=W + E)
+        vbar.grid(row=1, column=1, sticky=NS)
+
         # course_data()
+
         self.page.pack()
 
     def scores_page(self):
@@ -60,7 +67,12 @@ class StudentPage(object):
             table.column(columns[i], width=150, anchor='center')
             table.heading(columns[i], text=columns[i])
 
+        # ----vertical scrollbar------------
+        vbar = ttk.Scrollbar(self.page, orient=VERTICAL, command=table.yview)
+        table.configure(yscrollcommand=vbar.set)
         table.grid(row=1, sticky=W + E)
+        vbar.grid(row=1, column=1, sticky=NS)
+
         # scores_data()
 
         Label(self.page, text='Average Score: ', font=("Arial", 12)).grid(row=2, stick=E, pady=10)
