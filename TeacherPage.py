@@ -15,7 +15,6 @@ class TeacherPage(object):
         self.home_page()
         menubar = Menu(self.root)
         menubar.add_command(label='Home', command=self.home_page)
-        menubar.add_command(label='Chosen courses', command=self.courses_page)
         menubar.add_command(label='Scores', command=self.scores_page)
         self.root['menu'] = menubar  # 设置菜单栏
 
@@ -24,47 +23,31 @@ class TeacherPage(object):
         Label(self.page).grid(row=0, stick=W)
 
         # ID, Name, Sex, Entrance Age, Entrance Year, Class, Grade [7]
-        info_head = ['ID', 'Name', 'Sex', 'Entrance Age', 'Entrance Year', 'Class', 'Grade']
-        student_info = ['000001', 'Tom Jack', 'Male', '18', '2008', 'Class 1', 'Grade']
-        # student_info[6] = currentYear - Entrance Year
+        info_head = ['ID', 'Name']
+        teacher_info = ['000001', 'Jack Ma']
 
-        Label(self.page, text='Hello, Student {}!'.format(student_info[1]), font=("Arial", 16)).grid(row=1, stick=W,
+        Label(self.page, text='Hello, Teacher {}!'.format(teacher_info[1]), font=("Arial", 16)).grid(row=1, stick=W,
                                                                                                      pady=10)
-        for i in range(7):
-            Label(self.page, text=info_head[i] + ': ', font=("Arial", 12)).grid(row=i + 2, stick=W, pady=10)
-            Label(self.page, text=student_info[i], font=("Arial", 12)).grid(row=i + 2, column=1, stick=W, pady=10)
+        for i in range(2):
+            Label(self.page, text=info_head[i] + ': ', font=("Arial", 12)).grid(row=i + 2, stick=E, pady=10)
+            Label(self.page, text=teacher_info[i], font=("Arial", 12)).grid(row=i + 2, column=1, stick=W, pady=10)
 
-        self.page.pack()
-
-    def courses_page(self):
-        clear_frame(self.page)
-        Label(self.page).grid(row=0, stick=W)
-
-        columns = ('Course Name', 'Teacher Name', 'Credit', 'Course Grade', 'Canceled Year')
-        table = Treeview(self.page, height=14, show="headings", columns=columns)
-        for i in range(5):
-            table.column(columns[i], width=150, anchor='center')
-            table.heading(columns[i], text=columns[i])
-
-        table.grid(row=1, sticky=W + E)
+        columns = ('Course ID', 'Course Name', 'Credit', 'Course Grade', 'Canceled Year')
+        table = generate_table(self.page, 4, columns)
         # course_data()
+
         self.page.pack()
 
     def scores_page(self):
         clear_frame(self.page)
         Label(self.page).grid(row=0, stick=W)
 
-        columns = ('Course Name', 'Teacher Name', 'Credit', 'Course Grade', 'Chosen Year', 'Score')
-        table = Treeview(self.page, height=14, show="headings", columns=columns)
-        for i in range(6):
-            table.column(columns[i], width=150, anchor='center')
-            table.heading(columns[i], text=columns[i])
-
-        table.grid(row=1, sticky=W + E)
+        columns = ('Course ID', 'Course Name', 'Student ID', 'Student Name', 'Chosen Year', 'Score')
+        generate_table(self.page, 1, columns)
         # scores_data()
 
-        Label(self.page, text='Average Score: ', font=("Arial", 12)).grid(row=2, stick=E, pady=10)
-        Label(self.page, text='{}'.format('ave'), font=("Arial", 12)).grid(row=2, column=1, stick=W, pady=10)
+        # Label(self.page, text='Average Score: ', font=("Arial", 12)).grid(row=2, stick=E, pady=10)
+        # Label(self.page, text='{}'.format('ave'), font=("Arial", 12)).grid(row=2, column=1, stick=W, pady=10)
         self.page.pack()
 
 

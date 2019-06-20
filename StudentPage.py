@@ -53,17 +53,7 @@ class StudentPage(object):
         db_fetch = sql_conn(sql)
 
         columns = ('Course Name', 'Teacher Name', 'Credit', 'Course Grade', 'Canceled Year')
-        table = Treeview(self.page, height=14, show="headings", columns=columns)
-        for i in range(5):
-            table.column(columns[i], width=150, anchor='center')
-            table.heading(columns[i], text=columns[i])
-
-        # ----vertical scrollbar------------
-        vbar = ttk.Scrollbar(self.page, orient=VERTICAL, command=table.yview)
-        table.configure(yscrollcommand=vbar.set)
-        table.grid(row=1, sticky=W + E)
-        vbar.grid(row=1, column=1, sticky=NS)
-
+        table = generate_table(self.page, 1, columns)
         # course_data()
         for i in range(len(db_fetch)):
             table.insert('', i, values=(db_fetch[i][0], db_fetch[i][1],
@@ -82,17 +72,7 @@ class StudentPage(object):
         db_fetch = sql_conn(sql)
 
         columns = ('Course Name', 'Teacher Name', 'Credit', 'Course Grade', 'Chosen Year', 'Score')
-        table = Treeview(self.page, height=14, show="headings", columns=columns)
-        for i in range(6):
-            table.column(columns[i], width=150, anchor='center')
-            table.heading(columns[i], text=columns[i])
-
-        # ----vertical scrollbar------------
-        vbar = ttk.Scrollbar(self.page, orient=VERTICAL, command=table.yview)
-        table.configure(yscrollcommand=vbar.set)
-        table.grid(row=1, sticky=W + E)
-        vbar.grid(row=1, column=1, sticky=NS)
-
+        table = generate_table(self.page, 1, columns)
         # scores_data()
         avg = 0.0
         for i in range(len(db_fetch)):
