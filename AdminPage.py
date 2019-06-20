@@ -71,12 +71,8 @@ class AdminPage(object):
         Label(self.page).grid(row=0, stick=W)
 
         columns = ('Teacher ID', 'Teacher Name', 'Password', 'Course')
-        table = Treeview(self.page, height=14, show="headings", columns=columns)
-        for i in range(5):
-            table.column(columns[i], width=150, anchor='center')
-            table.heading(columns[i], text=columns[i])
+        table = generate_table(self.page, 1, columns)
 
-        table.grid(row=1, sticky=W + E)
         # course_data()
         self.page.pack()
 
@@ -85,12 +81,8 @@ class AdminPage(object):
         Label(self.page).grid(row=0, stick=W)
 
         columns = ('Course Name', 'Teacher Name', 'Credit', 'Course Grade', 'Canceled Year')
-        table = Treeview(self.page, height=14, show="headings", columns=columns)
-        for i in range(5):
-            table.column(columns[i], width=150, anchor='center')
-            table.heading(columns[i], text=columns[i])
+        table = generate_table(self.page, 1, columns)
 
-        table.grid(row=1, sticky=W + E)
         # course_data()
         self.page.pack()
 
@@ -99,12 +91,8 @@ class AdminPage(object):
         Label(self.page).grid(row=0, stick=W)
 
         columns = ('Course Name', 'Teacher Name', 'Credit', 'Course Grade', 'Chosen Year', 'Score')
-        table = Treeview(self.page, height=14, show="headings", columns=columns)
-        for i in range(6):
-            table.column(columns[i], width=150, anchor='center')
-            table.heading(columns[i], text=columns[i])
+        table = generate_table(self.page, 1, columns)
 
-        table.grid(row=1, sticky=W + E)
         # scores_data()
 
         Label(self.page, text='Average Score: ', font=("Arial", 12)).grid(row=2, stick=E, pady=10)
