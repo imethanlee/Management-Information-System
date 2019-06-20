@@ -10,6 +10,7 @@ class LoginPage(object):
         center_window(root, 500, 309)
         self.username = StringVar()
         self.password = StringVar()
+        self.usertype = StringVar()
         self.create_page()
 
     def create_page(self):
@@ -22,20 +23,28 @@ class LoginPage(object):
         v = StringVar()
         v.set('student')
         for i in range(3):
-            Radiobutton(self.page, variable=v, text=user_type[i], value=user_type[i],
+            Radiobutton(self.page, variable=self.usertype, text=user_type[i], value=user_type[i],
                         font=("Arial", 12)).grid(row=2, column=i, pady=10)
 
         Label(self.page, text='ID: ', font=("Arial", 12)).grid(row=3, stick=W, pady=10)
         Entry(self.page, textvariable=self.username, font=("Arial", 12)).grid(row=3, column=1, stick=E)
         Label(self.page, text='Password: ', font=("Arial", 12)).grid(row=4, stick=W, pady=10)
         Entry(self.page, textvariable=self.password, show='*', font=("Arial", 12)).grid(row=4, column=1, stick=E)
-        Button(self.page, text='Sign up', command=self.login_check, font=("Arial", 12)).grid(row=5, stick=W, pady=10)
+        Button(self.page, text='Sign in', command=self.login_check, font=("Arial", 12)).grid(row=5, stick=W, pady=10)
         Button(self.page, text='Exit', command=self.page.quit, font=("Arial", 12)).grid(row=5, column=1, stick=E)
 
     def login_check(self):
+        print(self.usertype.get())
+        type = self.usertype.get()
         name = self.username.get()
         secret = self.password.get()
-        if name == 'wangliang' and secret == '123456':
+        s = 'select * from user where user.username="'+name+'' \
+            '" and user.password="'+secret+'' \
+            '" and user.usertype="'+type+'"'
+
+        db_fetch = sql_conn(s)
+
+        if len(db_fetch) != 0:
             self.page.destroy()
             # MainPage(self.root)
         else:
