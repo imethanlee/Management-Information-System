@@ -21,13 +21,10 @@ class TeacherPage(object):
     def home_page(self):
         clear_frame(self.page)
         Label(self.page).grid(row=0, stick=W)
-        # get data from database
-        sql = 'select * from teacher where teacher.teacherID="'+GlobalVar.login_id+'"'
-        db_fetch = sql_conn(sql)[0]
 
         # ID, Name, Sex, Entrance Age, Entrance Year, Class, Grade [7]
         info_head = ['ID', 'Name']
-        teacher_info = [db_fetch[0], db_fetch[1]]
+        teacher_info = ['000001', 'Jack Ma']
 
         Label(self.page, text='Hello, Teacher {}!'.format(teacher_info[1]), font=("Arial", 16)).grid(row=1, stick=W,
                                                                                                      pady=10)
