@@ -15,6 +15,13 @@ class AdminPage(object):
         self.tname = StringVar()
         self.cid = StringVar()
         self.cname = StringVar()
+        self.sex = StringVar()
+        self.eage = StringVar()
+        self.eyear = StringVar()
+        self.credit = StringVar()
+        self.cgrade = StringVar()
+        self.cancelYear = StringVar()
+        self.chosenYear = StringVar()
         self.student = StringVar()
         self.course = StringVar()
         self.teacher = StringVar()
@@ -74,13 +81,17 @@ class AdminPage(object):
             Entry(window, textvariable=self.sname, font=("Arial", 12), width=12).grid(row=2, column=1, stick=E + W,
                                                                                       pady=10)
             Label(window, text='Sex(Male/Female): ', font=("Arial", 12)).grid(row=3, stick=E + W, pady=10)
-            Entry(window, font=("Arial", 12), width=12).grid(row=3, column=1, stick=E + W, pady=10)
+            Entry(window, textvariable=self.sex, font=("Arial", 12), width=12).grid(row=3, column=1, stick=E + W,
+                                                                                    pady=10)
             Label(window, text='Entrance Age: ', font=("Arial", 12)).grid(row=4, stick=E + W, pady=10)
-            Entry(window, font=("Arial", 12), width=12).grid(row=4, column=1, stick=E + W, pady=10)
+            Entry(window, textvariable=self.eage, font=("Arial", 12), width=12).grid(row=4, column=1, stick=E + W,
+                                                                                     pady=10)
             Label(window, text='Entrance Year: ', font=("Arial", 12)).grid(row=5, stick=E + W, pady=10)
-            Entry(window, font=("Arial", 12), width=12).grid(row=5, column=1, stick=E + W, pady=10)
+            Entry(window, textvariable=self.eyear, font=("Arial", 12), width=12).grid(row=5, column=1, stick=E + W,
+                                                                                      pady=10)
             Label(window, text='Class: ', font=("Arial", 12)).grid(row=6, stick=E + W, pady=10)
-            Entry(window, font=("Arial", 12), width=12).grid(row=6, column=1, stick=E + W, pady=10)
+            Entry(window, textvariable=self.clss, font=("Arial", 12), width=12).grid(row=6, column=1, stick=E + W,
+                                                                                     pady=10)
             Label(window, text='Drop Out(Y/N): ', font=("Arial", 12)).grid(row=7, stick=E + W, pady=10)
             Entry(window, font=("Arial", 12), width=12).grid(row=7, column=1, stick=E + W, pady=10)
 
@@ -117,13 +128,17 @@ class AdminPage(object):
             Entry(window, textvariable=self.sname, font=("Arial", 12), width=12).grid(row=2, column=1, stick=E + W,
                                                                                       pady=10)
             Label(window, text='Sex(Male/Female): ', font=("Arial", 12)).grid(row=3, stick=E + W, pady=10)
-            Entry(window, font=("Arial", 12), width=12).grid(row=3, column=1, stick=E + W, pady=10)
+            Entry(window, textvariable=self.sex, font=("Arial", 12), width=12).grid(row=3, column=1, stick=E + W,
+                                                                                    pady=10)
             Label(window, text='Entrance Age: ', font=("Arial", 12)).grid(row=4, stick=E + W, pady=10)
-            Entry(window, font=("Arial", 12), width=12).grid(row=4, column=1, stick=E + W, pady=10)
+            Entry(window, textvariable=self.eage, font=("Arial", 12), width=12).grid(row=4, column=1, stick=E + W,
+                                                                                     pady=10)
             Label(window, text='Entrance Year: ', font=("Arial", 12)).grid(row=5, stick=E + W, pady=10)
-            Entry(window, font=("Arial", 12), width=12).grid(row=5, column=1, stick=E + W, pady=10)
+            Entry(window, textvariable=self.eyear, font=("Arial", 12), width=12).grid(row=5, column=1, stick=E + W,
+                                                                                      pady=10)
             Label(window, text='Class: ', font=("Arial", 12)).grid(row=6, stick=E + W, pady=10)
-            Entry(window, font=("Arial", 12), width=12).grid(row=6, column=1, stick=E + W, pady=10)
+            Entry(window, textvariable=self.clss, font=("Arial", 12), width=12).grid(row=6, column=1, stick=E + W,
+                                                                                     pady=10)
             Label(window, text='Drop Out(Y/N): ', font=("Arial", 12)).grid(row=7, stick=E + W, pady=10)
             Entry(window, font=("Arial", 12), width=12).grid(row=7, column=1, stick=E + W, pady=10)
 
@@ -172,7 +187,8 @@ class AdminPage(object):
             Entry(window, textvariable=self.tname, font=("Arial", 12), width=12).grid(row=2, column=1, stick=E + W,
                                                                                       pady=10)
             Label(window, text='Courses: ', font=("Arial", 12)).grid(row=3, stick=E + W, pady=10)
-            Entry(window, font=("Arial", 12), width=12).grid(row=3, column=1, stick=E + W, pady=10)
+            Entry(window, textvariable=self.cname, font=("Arial", 12), width=12).grid(row=3, column=1, stick=E + W,
+                                                                                      pady=10)
 
             Label(window).grid(row=4, stick=W)
 
@@ -207,7 +223,8 @@ class AdminPage(object):
             Entry(window, textvariable=self.tname, font=("Arial", 12), width=12).grid(row=2, column=1, stick=E + W,
                                                                                       pady=10)
             Label(window, text='Courses: ', font=("Arial", 12)).grid(row=3, stick=E + W, pady=10)
-            Entry(window, font=("Arial", 12), width=12).grid(row=3, column=1, stick=E + W, pady=10)
+            Entry(window, textvariable=self.cname, font=("Arial", 12), width=12).grid(row=3, column=1, stick=E + W,
+                                                                                      pady=10)
 
             Label(window).grid(row=4, stick=W)
 
@@ -250,11 +267,14 @@ class AdminPage(object):
             Entry(window, textvariable=self.tid, font=("Arial", 12), width=12).grid(row=3, column=1, stick=E + W,
                                                                                     pady=10)
             Label(window, text='Credit: ', font=("Arial", 12)).grid(row=4, stick=E + W, pady=10)
-            Entry(window, font=("Arial", 12), width=12).grid(row=4, column=1, stick=E + W, pady=10)
+            Entry(window, textvariable=self.credit, font=("Arial", 12), width=12).grid(row=4, column=1, stick=E + W,
+                                                                                       pady=10)
             Label(window, text='Course Grade: ', font=("Arial", 12)).grid(row=5, stick=E + W, pady=10)
-            Entry(window, font=("Arial", 12), width=12).grid(row=5, column=1, stick=E + W, pady=10)
+            Entry(window, textvariable=self.cgrade, font=("Arial", 12), width=12).grid(row=5, column=1, stick=E + W,
+                                                                                       pady=10)
             Label(window, text='Canceled Year: ', font=("Arial", 12)).grid(row=6, stick=E + W, pady=10)
-            Entry(window, font=("Arial", 12), width=12).grid(row=6, column=1, stick=E + W, pady=10)
+            Entry(window, textvariable=self.cancelYear, font=("Arial", 12), width=12).grid(row=6, column=1, stick=E + W,
+                                                                                           pady=10)
 
             Label(window).grid(row=7, stick=W)
 
@@ -292,11 +312,14 @@ class AdminPage(object):
             Entry(window, textvariable=self.tid, font=("Arial", 12), width=12).grid(row=3, column=1, stick=E + W,
                                                                                     pady=10)
             Label(window, text='Credit: ', font=("Arial", 12)).grid(row=4, stick=E + W, pady=10)
-            Entry(window, font=("Arial", 12), width=12).grid(row=4, column=1, stick=E + W, pady=10)
+            Entry(window, textvariable=self.credit, font=("Arial", 12), width=12).grid(row=4, column=1, stick=E + W,
+                                                                                       pady=10)
             Label(window, text='Course Grade: ', font=("Arial", 12)).grid(row=5, stick=E + W, pady=10)
-            Entry(window, font=("Arial", 12), width=12).grid(row=5, column=1, stick=E + W, pady=10)
+            Entry(window, textvariable=self.cgrade, font=("Arial", 12), width=12).grid(row=5, column=1, stick=E + W,
+                                                                                       pady=10)
             Label(window, text='Canceled Year: ', font=("Arial", 12)).grid(row=6, stick=E + W, pady=10)
-            Entry(window, font=("Arial", 12), width=12).grid(row=6, column=1, stick=E + W, pady=10)
+            Entry(window, textvariable=self.cancelYear, font=("Arial", 12), width=12).grid(row=6, column=1, stick=E + W,
+                                                                                           pady=10)
 
             Label(window).grid(row=7, stick=W)
 
@@ -340,7 +363,8 @@ class AdminPage(object):
             Entry(window, textvariable=self.cid, font=("Arial", 12), width=12).grid(row=2, column=1, stick=E + W,
                                                                                     pady=10)
             Label(window, text='Chosen Year: ', font=("Arial", 12)).grid(row=3, stick=E + W, pady=10)
-            Entry(window, font=("Arial", 12), width=12).grid(row=3, column=1, stick=E + W, pady=10)
+            Entry(window, textvariable=self.chosenYear, font=("Arial", 12), width=12).grid(row=3, column=1, stick=E + W,
+                                                                                           pady=10)
 
             Label(window).grid(row=4, stick=W)
 
@@ -376,7 +400,8 @@ class AdminPage(object):
             Entry(window, textvariable=self.cid, font=("Arial", 12), width=12).grid(row=2, column=1, stick=E + W,
                                                                                     pady=10)
             Label(window, text='Chosen Year: ', font=("Arial", 12)).grid(row=3, stick=E + W, pady=10)
-            Entry(window, font=("Arial", 12), width=12).grid(row=3, column=1, stick=E + W, pady=10)
+            Entry(window, textvariable=self.chosenYear, font=("Arial", 12), width=12).grid(row=3, column=1, stick=E + W,
+                                                                                           pady=10)
 
             Label(window).grid(row=4, stick=W)
 
