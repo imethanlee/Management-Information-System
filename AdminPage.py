@@ -9,6 +9,12 @@ class AdminPage(object):
         self.root = master  # 定义内部变量root
         center_window(self.root, 1000, 618)
         self.create_page()
+        self.sid = StringVar()
+        self.sname = StringVar()
+        self.tid = StringVar()
+        self.tname = StringVar()
+        self.cid = StringVar()
+        self.cname = StringVar()
         self.student = StringVar()
         self.course = StringVar()
         self.teacher = StringVar()
@@ -43,27 +49,96 @@ class AdminPage(object):
         clear_frame(self.page)
         Label(self.page).grid(row=0, stick=W)
 
-        columns = ('Student ID', 'Name', 'Password', 'Sex', 'Entrance Age', 'Entrance Year',
+        columns = ('Student ID', 'Name', 'Sex', 'Entrance Age', 'Entrance Year',
                    'Class', 'Grade', 'Drop Out')
         table = generate_table(self.page, 1, columns)
 
         query_frame = Frame(self.page)
         query_frame.grid(row=2, stick=W, ipady=10, ipadx=10)
         Label(query_frame, text='Student ID: ', font=("Arial", 16)).grid(row=0, stick=E + W, pady=10)
-        Text(query_frame, font=("Arial", 16), width=20, height=1).grid(row=0, column=1, stick=E + W, pady=10)
+        Entry(query_frame, textvariable=self.sid, font=("Arial", 16), width=20).grid(row=0, column=1, stick=E + W,
+                                                                                     pady=10)
         Label(query_frame, text=' / Student Name: ', font=("Arial", 16)).grid(row=0, column=2, stick=E + W, pady=10)
-        Text(query_frame, font=("Arial", 16), width=20, height=1).grid(row=0, column=3, stick=E + W, pady=10)
+        Entry(query_frame, textvariable=self.sname, font=("Arial", 16), width=20).grid(row=0, column=3, stick=E + W,
+                                                                                       pady=10)
 
-        Button(query_frame, text='Search', command='updateFunction',
+        def modify():
+            window = Tk()
+            window.title('Modify student info')
+            center_window(window, 309, 500)
+            Label(window).grid(row=0, stick=W)
+            Label(window, text='Student ID: ', font=("Arial", 12)).grid(row=1, stick=E + W, pady=10)
+            Entry(window, textvariable=self.sid, font=("Arial", 12), width=12).grid(row=1, column=1, stick=E + W,
+                                                                                    pady=10)
+            Label(window, text='Name: ', font=("Arial", 12)).grid(row=2, stick=E + W, pady=10)
+            Entry(window, textvariable=self.sname, font=("Arial", 12), width=12).grid(row=2, column=1, stick=E + W,
+                                                                                      pady=10)
+            Label(window, text='Sex(Male/Female): ', font=("Arial", 12)).grid(row=3, stick=E + W, pady=10)
+            Entry(window, font=("Arial", 12), width=12).grid(row=3, column=1, stick=E + W, pady=10)
+            Label(window, text='Entrance Age: ', font=("Arial", 12)).grid(row=4, stick=E + W, pady=10)
+            Entry(window, font=("Arial", 12), width=12).grid(row=4, column=1, stick=E + W, pady=10)
+            Label(window, text='Entrance Year: ', font=("Arial", 12)).grid(row=5, stick=E + W, pady=10)
+            Entry(window, font=("Arial", 12), width=12).grid(row=5, column=1, stick=E + W, pady=10)
+            Label(window, text='Class: ', font=("Arial", 12)).grid(row=6, stick=E + W, pady=10)
+            Entry(window, font=("Arial", 12), width=12).grid(row=6, column=1, stick=E + W, pady=10)
+            Label(window, text='Drop Out(Y/N): ', font=("Arial", 12)).grid(row=7, stick=E + W, pady=10)
+            Entry(window, font=("Arial", 12), width=12).grid(row=7, column=1, stick=E + W, pady=10)
+
+            Label(window).grid(row=8, stick=W)
+
+            def save_new_student():
+                # save to database
+                pass
+
+            Button(window, text='Save', command=save_new_student,
+                   font=("Arial", 16)).grid(row=9, column=0, stick=E, pady=10)
+
+        Button(query_frame, text='Modify', command=modify,
                font=("Arial", 16)).grid(row=2, column=1, stick=W, pady=10)
 
-        Button(query_frame, text='Delete', command='updateFunction',
+        def delete():
+            studentID = ''
+            # delete student
+
+        Button(query_frame, text='Delete', command=delete,
                font=("Arial", 16)).grid(row=2, column=2, stick=W, pady=10)
 
         Label(query_frame).grid(row=3, stick=W)
 
-        Button(query_frame, text='New', command='',
+        def new_student():
+            window = Tk()
+            window.title('New student info')
+            center_window(window, 309, 500)
+            Label(window).grid(row=0, stick=W)
+            Label(window, text='Student ID: ', font=("Arial", 12)).grid(row=1, stick=E + W, pady=10)
+            Entry(window, textvariable=self.sid, font=("Arial", 12), width=12).grid(row=1, column=1, stick=E + W,
+                                                                                    pady=10)
+            Label(window, text='Name: ', font=("Arial", 12)).grid(row=2, stick=E + W, pady=10)
+            Entry(window, textvariable=self.sname, font=("Arial", 12), width=12).grid(row=2, column=1, stick=E + W,
+                                                                                      pady=10)
+            Label(window, text='Sex(Male/Female): ', font=("Arial", 12)).grid(row=3, stick=E + W, pady=10)
+            Entry(window, font=("Arial", 12), width=12).grid(row=3, column=1, stick=E + W, pady=10)
+            Label(window, text='Entrance Age: ', font=("Arial", 12)).grid(row=4, stick=E + W, pady=10)
+            Entry(window, font=("Arial", 12), width=12).grid(row=4, column=1, stick=E + W, pady=10)
+            Label(window, text='Entrance Year: ', font=("Arial", 12)).grid(row=5, stick=E + W, pady=10)
+            Entry(window, font=("Arial", 12), width=12).grid(row=5, column=1, stick=E + W, pady=10)
+            Label(window, text='Class: ', font=("Arial", 12)).grid(row=6, stick=E + W, pady=10)
+            Entry(window, font=("Arial", 12), width=12).grid(row=6, column=1, stick=E + W, pady=10)
+            Label(window, text='Drop Out(Y/N): ', font=("Arial", 12)).grid(row=7, stick=E + W, pady=10)
+            Entry(window, font=("Arial", 12), width=12).grid(row=7, column=1, stick=E + W, pady=10)
+
+            Label(window).grid(row=8, stick=W)
+
+            def save_new_student():
+                # save to database
+                pass
+
+            Button(window, text='Save', command=save_new_student,
+                   font=("Arial", 16)).grid(row=9, column=0, stick=E, pady=10)
+
+        Button(query_frame, text='New', command=new_student,
                font=("Arial", 16)).grid(row=5, column=1, stick=W, pady=10)
+
         Button(query_frame, text='Drop out', command='updateFunction',
                font=("Arial", 16)).grid(row=5, column=2, stick=W, pady=10)
 
@@ -74,9 +149,77 @@ class AdminPage(object):
         clear_frame(self.page)
         Label(self.page).grid(row=0, stick=W)
 
-        columns = ('Teacher ID', 'Teacher Name', 'Password', 'Course')
+        columns = ('Teacher ID', 'Teacher Name', 'Courses')
         table = generate_table(self.page, 1, columns)
+        query_frame = Frame(self.page)
+        query_frame.grid(row=2, stick=W, ipady=10, ipadx=10)
+        Label(query_frame, text='Teacher ID: ', font=("Arial", 16)).grid(row=0, stick=E + W, pady=10)
+        Entry(query_frame, textvariable=self.tid, font=("Arial", 16), width=20).grid(row=0, column=1, stick=E + W,
+                                                                                     pady=10)
+        Label(query_frame, text=' / Teacher Name: ', font=("Arial", 16)).grid(row=0, column=2, stick=E + W, pady=10)
+        Entry(query_frame, textvariable=self.tname, font=("Arial", 16), width=20).grid(row=0, column=3, stick=E + W,
+                                                                                       pady=10)
 
+        def modify():
+            window = Tk()
+            window.title('Modify teacher info')
+            center_window(window, 309, 500)
+            Label(window).grid(row=0, stick=W)
+            Label(window, text='Teacher ID: ', font=("Arial", 12)).grid(row=1, stick=E + W, pady=10)
+            Entry(window, textvariable=self.tid, font=("Arial", 12), width=12).grid(row=1, column=1, stick=E + W,
+                                                                                    pady=10)
+            Label(window, text='Teacher Name: ', font=("Arial", 12)).grid(row=2, stick=E + W, pady=10)
+            Entry(window, textvariable=self.tname, font=("Arial", 12), width=12).grid(row=2, column=1, stick=E + W,
+                                                                                      pady=10)
+            Label(window, text='Courses: ', font=("Arial", 12)).grid(row=3, stick=E + W, pady=10)
+            Entry(window, font=("Arial", 12), width=12).grid(row=3, column=1, stick=E + W, pady=10)
+
+            Label(window).grid(row=4, stick=W)
+
+            def save_new_teacher():
+                # save to database
+                pass
+
+            Button(window, text='Save', command=save_new_teacher,
+                   font=("Arial", 16)).grid(row=5, column=0, stick=E, pady=10)
+
+        Button(query_frame, text='Modify', command=modify,
+               font=("Arial", 16)).grid(row=2, column=1, stick=W, pady=10)
+
+        def delete():
+            teacherID = ''
+            # delete student
+
+        Button(query_frame, text='Delete', command=delete,
+               font=("Arial", 16)).grid(row=2, column=2, stick=W, pady=10)
+
+        Label(query_frame).grid(row=3, stick=W)
+
+        def new_teacher():
+            window = Tk()
+            window.title('New student info')
+            center_window(window, 309, 500)
+            Label(window).grid(row=0, stick=W)
+            Label(window, text='Teacher ID: ', font=("Arial", 12)).grid(row=1, stick=E + W, pady=10)
+            Entry(window, textvariable=self.tid, font=("Arial", 12), width=12).grid(row=1, column=1, stick=E + W,
+                                                                                    pady=10)
+            Label(window, text='Teacher Name: ', font=("Arial", 12)).grid(row=2, stick=E + W, pady=10)
+            Entry(window, textvariable=self.tname, font=("Arial", 12), width=12).grid(row=2, column=1, stick=E + W,
+                                                                                      pady=10)
+            Label(window, text='Courses: ', font=("Arial", 12)).grid(row=3, stick=E + W, pady=10)
+            Entry(window, font=("Arial", 12), width=12).grid(row=3, column=1, stick=E + W, pady=10)
+
+            Label(window).grid(row=4, stick=W)
+
+            def save_new_teacher():
+                # save to database
+                pass
+
+            Button(window, text='Save', command=save_new_teacher,
+                   font=("Arial", 16)).grid(row=5, column=0, stick=E, pady=10)
+
+        Button(query_frame, text='New', command=new_teacher,
+               font=("Arial", 16)).grid(row=5, column=1, stick=W, pady=10)
         # course_data()
         self.page.pack()
 
@@ -84,8 +227,88 @@ class AdminPage(object):
         clear_frame(self.page)
         Label(self.page).grid(row=0, stick=W)
 
-        columns = ('Course Name', 'Teacher Name', 'Credit', 'Course Grade', 'Canceled Year')
+        columns = ('Course ID', 'Course Name', 'Teacher ID', 'Teacher Name', 'Credit', 'Course Grade', 'Canceled Year')
         table = generate_table(self.page, 1, columns)
+        query_frame = Frame(self.page)
+        query_frame.grid(row=2, stick=W, ipady=10, ipadx=10)
+        Label(query_frame, text='Course ID: ', font=("Arial", 16)).grid(row=0, stick=E + W, pady=10)
+        Entry(query_frame, textvariable=self.cid, font=("Arial", 16), width=20).grid(row=0, column=1, stick=E + W,
+                                                                                     pady=10)
+
+        def modify():
+            window = Tk()
+            window.title('Modify course info')
+            center_window(window, 309, 500)
+            Label(window).grid(row=0, stick=W)
+            Label(window, text='Course ID: ', font=("Arial", 12)).grid(row=1, stick=E + W, pady=10)
+            Entry(window, textvariable=self.cid, font=("Arial", 12), width=12).grid(row=1, column=1, stick=E + W,
+                                                                                    pady=10)
+            Label(window, text='Course Name: ', font=("Arial", 12)).grid(row=2, stick=E + W, pady=10)
+            Entry(window, textvariable=self.cname, font=("Arial", 12), width=12).grid(row=2, column=1, stick=E + W,
+                                                                                      pady=10)
+            Label(window, text='Teacher ID: ', font=("Arial", 12)).grid(row=3, stick=E + W, pady=10)
+            Entry(window, textvariable=self.tid, font=("Arial", 12), width=12).grid(row=3, column=1, stick=E + W,
+                                                                                    pady=10)
+            Label(window, text='Credit: ', font=("Arial", 12)).grid(row=4, stick=E + W, pady=10)
+            Entry(window, font=("Arial", 12), width=12).grid(row=4, column=1, stick=E + W, pady=10)
+            Label(window, text='Course Grade: ', font=("Arial", 12)).grid(row=5, stick=E + W, pady=10)
+            Entry(window, font=("Arial", 12), width=12).grid(row=5, column=1, stick=E + W, pady=10)
+            Label(window, text='Canceled Year: ', font=("Arial", 12)).grid(row=6, stick=E + W, pady=10)
+            Entry(window, font=("Arial", 12), width=12).grid(row=6, column=1, stick=E + W, pady=10)
+
+            Label(window).grid(row=7, stick=W)
+
+            def save_new_courses():
+                # save to database
+                pass
+
+            Button(window, text='Save', command=save_new_courses,
+                   font=("Arial", 16)).grid(row=8, column=0, stick=E, pady=10)
+
+        Button(query_frame, text='Modify', command=modify,
+               font=("Arial", 16)).grid(row=2, column=1, stick=W, pady=10)
+
+        def delete():
+            teacherID = ''
+            # delete student
+
+        Button(query_frame, text='Delete', command=delete,
+               font=("Arial", 16)).grid(row=2, column=2, stick=W, pady=10)
+
+        Label(query_frame).grid(row=3, stick=W)
+
+        def new_courses():
+            window = Tk()
+            window.title('New course info')
+            center_window(window, 309, 500)
+            Label(window).grid(row=0, stick=W)
+            Label(window, text='Course ID: ', font=("Arial", 12)).grid(row=1, stick=E + W, pady=10)
+            Entry(window, textvariable=self.cid, font=("Arial", 12), width=12).grid(row=1, column=1, stick=E + W,
+                                                                                    pady=10)
+            Label(window, text='Course Name: ', font=("Arial", 12)).grid(row=2, stick=E + W, pady=10)
+            Entry(window, textvariable=self.cname, font=("Arial", 12), width=12).grid(row=2, column=1, stick=E + W,
+                                                                                      pady=10)
+            Label(window, text='Teacher ID: ', font=("Arial", 12)).grid(row=3, stick=E + W, pady=10)
+            Entry(window, textvariable=self.tid, font=("Arial", 12), width=12).grid(row=3, column=1, stick=E + W,
+                                                                                    pady=10)
+            Label(window, text='Credit: ', font=("Arial", 12)).grid(row=4, stick=E + W, pady=10)
+            Entry(window, font=("Arial", 12), width=12).grid(row=4, column=1, stick=E + W, pady=10)
+            Label(window, text='Course Grade: ', font=("Arial", 12)).grid(row=5, stick=E + W, pady=10)
+            Entry(window, font=("Arial", 12), width=12).grid(row=5, column=1, stick=E + W, pady=10)
+            Label(window, text='Canceled Year: ', font=("Arial", 12)).grid(row=6, stick=E + W, pady=10)
+            Entry(window, font=("Arial", 12), width=12).grid(row=6, column=1, stick=E + W, pady=10)
+
+            Label(window).grid(row=7, stick=W)
+
+            def save_new_courses():
+                # save to database
+                pass
+
+            Button(window, text='Save', command=save_new_courses,
+                   font=("Arial", 16)).grid(row=8, column=0, stick=E, pady=10)
+
+        Button(query_frame, text='New', command=new_courses,
+               font=("Arial", 16)).grid(row=5, column=1, stick=W, pady=10)
 
         # course_data()
         self.page.pack()
@@ -94,13 +317,81 @@ class AdminPage(object):
         clear_frame(self.page)
         Label(self.page).grid(row=0, stick=W)
 
-        columns = ('Course Name', 'Teacher Name', 'Credit', 'Course Grade', 'Chosen Year', 'Score')
+        columns = ('Student ID', 'Student Name', 'Course ID', 'Course Name', 'Chosen Year')
         table = generate_table(self.page, 1, columns)
+        query_frame = Frame(self.page)
+        query_frame.grid(row=2, stick=W, ipady=10, ipadx=10)
+        Label(query_frame, text='Student ID: ', font=("Arial", 16)).grid(row=0, stick=E + W, pady=10)
+        Entry(query_frame, textvariable=self.sid, font=("Arial", 16), width=20).grid(row=0, column=1, stick=E + W,
+                                                                                     pady=10)
+        Label(query_frame, text=' / Course ID: ', font=("Arial", 16)).grid(row=0, column=2, stick=E + W, pady=10)
+        Entry(query_frame, textvariable=self.cid, font=("Arial", 16), width=20).grid(row=0, column=3, stick=E + W,
+                                                                                     pady=10)
+
+        def modify():
+            window = Tk()
+            window.title('Modify course choosing info')
+            center_window(window, 309, 500)
+            Label(window).grid(row=0, stick=W)
+            Label(window, text='Student ID: ', font=("Arial", 12)).grid(row=1, stick=E + W, pady=10)
+            Entry(window, textvariable=self.sid, font=("Arial", 12), width=12).grid(row=1, column=1, stick=E + W,
+                                                                                    pady=10)
+            Label(window, text='Course ID: ', font=("Arial", 12)).grid(row=2, stick=E + W, pady=10)
+            Entry(window, textvariable=self.cid, font=("Arial", 12), width=12).grid(row=2, column=1, stick=E + W,
+                                                                                    pady=10)
+            Label(window, text='Chosen Year: ', font=("Arial", 12)).grid(row=3, stick=E + W, pady=10)
+            Entry(window, font=("Arial", 12), width=12).grid(row=3, column=1, stick=E + W, pady=10)
+
+            Label(window).grid(row=4, stick=W)
+
+            def save_new_course_choosing():
+                # save to database
+                pass
+
+            Button(window, text='Save', command=save_new_course_choosing,
+                   font=("Arial", 16)).grid(row=5, column=0, stick=E, pady=10)
+
+        Button(query_frame, text='Modify', command=modify,
+               font=("Arial", 16)).grid(row=2, column=1, stick=W, pady=10)
+
+        def delete():
+            studentID = ''
+            courseID = ''
+            # delete student
+
+        Button(query_frame, text='Delete', command=delete,
+               font=("Arial", 16)).grid(row=2, column=2, stick=W, pady=10)
+
+        Label(query_frame).grid(row=3, stick=W)
+
+        def new_course_choosing():
+            window = Tk()
+            window.title('New student info')
+            center_window(window, 309, 500)
+            Label(window).grid(row=0, stick=W)
+            Label(window, text='Student ID: ', font=("Arial", 12)).grid(row=1, stick=E + W, pady=10)
+            Entry(window, textvariable=self.sid, font=("Arial", 12), width=12).grid(row=1, column=1, stick=E + W,
+                                                                                    pady=10)
+            Label(window, text='Course ID: ', font=("Arial", 12)).grid(row=2, stick=E + W, pady=10)
+            Entry(window, textvariable=self.cid, font=("Arial", 12), width=12).grid(row=2, column=1, stick=E + W,
+                                                                                    pady=10)
+            Label(window, text='Chosen Year: ', font=("Arial", 12)).grid(row=3, stick=E + W, pady=10)
+            Entry(window, font=("Arial", 12), width=12).grid(row=3, column=1, stick=E + W, pady=10)
+
+            Label(window).grid(row=4, stick=W)
+
+            def save_new_course_choosing():
+                # save to database
+                pass
+
+            Button(window, text='Save', command=save_new_course_choosing,
+                   font=("Arial", 16)).grid(row=5, column=0, stick=E, pady=10)
+
+        Button(query_frame, text='New', command=new_course_choosing,
+               font=("Arial", 16)).grid(row=5, column=1, stick=W, pady=10)
 
         # scores_data()
 
-        Label(self.page, text='Average Score: ', font=("Arial", 12)).grid(row=2, stick=E, pady=10)
-        Label(self.page, text='{}'.format('ave'), font=("Arial", 12)).grid(row=2, column=1, stick=W, pady=10)
         self.page.pack()
 
     def query_student_page(self):  # 3\4
