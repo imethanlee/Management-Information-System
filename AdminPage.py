@@ -114,9 +114,13 @@ class AdminPage(object):
             Label(window).grid(row=8, stick=W)
 
             def save_new_student(table):
-                print(self.sid.get())
-                sql = 'update student set sex="Female" where studentID="s03"'
+
+                sql = 'update student set name="{}", sex="{}", entranceAge="{}", ' \
+                      'entranceYear="{}", class="{}" where studentID="{}"'\
+                    .format(self.sname.get(), self.sex.get(), self.eage.get(),
+                            self.eyear.get(), self.clss.get(), self.sid.get())
                 sql_conn(sql)
+
                 clear_table(table)
                 sql = 'select * from student'
                 db_fetch = sql_conn(sql)
@@ -124,7 +128,7 @@ class AdminPage(object):
                     table.insert('', i, values=(db_fetch[i][0], db_fetch[i][1],
                                                 db_fetch[i][2], db_fetch[i][3],
                                                 db_fetch[i][4], db_fetch[i][5]))
-
+                window.destroy()
                 # save to database
 
             Button(window, text='Save', command=lambda: save_new_student(table),
@@ -137,9 +141,9 @@ class AdminPage(object):
         def delete(table):
             studentID = ''
             # delete student
-            sql = 'delete from coursechoosing where studentID="s03"'
+            sql = 'delete from coursechoosing where studentID="{}"'.format(self.sid.get())
             sql_conn(sql)
-            sql = 'delete from student where studentID="s03"'
+            sql = 'delete from student where studentID="{}" or name="{}"'.format(self.sid.get(), self.sname.get())
             sql_conn(sql)
 
             clear_table(table)
@@ -192,12 +196,17 @@ class AdminPage(object):
             Label(window).grid(row=8, stick=W)
 
             def save_new_student(table):
-                sql = 'insert into student(studentID, name, sex, entranceAge, entranceYear, class) ' \
-                      'values ({}, {}, {}, {}, {}, {})' \
-                    .format(self.sid.get(), self.sname.get(), self.sex.get(), self.age.get(), self.eyear.get(),
-                            self.clss.get())
 
+                sql = 'insert into student(studentID, name, sex, entranceAge, entranceYear, class) ' \
+                      'values ("{}", "{}", "{}", "{}", "{}", "{}")' \
+                    .format(self.sid.get(), self.sname.get(), self.sex.get(),
+                            self.eage.get(), self.eyear.get(), self.clss.get())
                 sql_conn(sql)
+
+                sql = 'insert into user(usertype, username, password) values ("{}","{}","{}")'\
+                    .format("student", self.sid.get(), self.sid.get())
+                sql_conn(sql)
+
                 clear_table(table)
                 sql = 'select * from student'
                 db_fetch = sql_conn(sql)
@@ -205,8 +214,8 @@ class AdminPage(object):
                     table.insert('', i, values=(db_fetch[i][0], db_fetch[i][1],
                                                 db_fetch[i][2], db_fetch[i][3],
                                                 db_fetch[i][4], db_fetch[i][5]))
-
-                # sql_conn(sql)
+                sql_conn(sql)
+                window.destroy()
 
             Button(window, text='Save', command=lambda: save_new_student(table),
                    font=("Arial", 16)).grid(row=9, column=0, stick=E, pady=10)
@@ -429,7 +438,9 @@ class AdminPage(object):
 
             def save_new_courses(table):
                 sql = 'insert into course(courseID, name, teacherID, credit, grade, canceledYear) ' \
-                      'values ("c03", "E++", "t02", "1", "1", "2049")'
+                      'values ("{}", "{}", "{}", "{}", "{}", "{}")'\
+                    .format(self.cid.get(), self.cname.get(), self.tid.get(),
+                            self.credit.get(), self.cgrade.get(), self.cancelYear.get())
 
                 sql_conn(sql)
                 clear_table(table)
