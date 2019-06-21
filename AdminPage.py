@@ -5,6 +5,8 @@ from utils import *
 
 
 class AdminPage(object):
+
+
     def __init__(self, master=None):
         self.root = master  # 定义内部变量root
         center_window(self.root, 1000, 618)
@@ -22,6 +24,7 @@ class AdminPage(object):
         self.cgrade = StringVar()
         self.cancelYear = StringVar()
         self.chosenYear = StringVar()
+
         self.student = StringVar()
         self.course = StringVar()
         self.teacher = StringVar()
@@ -57,8 +60,14 @@ class AdminPage(object):
         Label(self.page).grid(row=0, stick=W)
 
         columns = ('Student ID', 'Name', 'Sex', 'Entrance Age', 'Entrance Year',
-                   'Class', 'Grade', 'Drop Out')
+                   'Class')
         table = generate_table(self.page, 1, columns)
+        sql = 'select * from student'
+        db_fetch = sql_conn(sql)
+        for i in range(len(db_fetch)):
+            table.insert('', i, values=(db_fetch[i][0], db_fetch[i][1],
+                                        db_fetch[i][2], db_fetch[i][3],
+                                        db_fetch[i][4], db_fetch[i][5]))
 
         query_frame = Frame(self.page)
         query_frame.grid(row=2, stick=W, ipady=10, ipadx=10)
@@ -69,89 +78,147 @@ class AdminPage(object):
         Entry(query_frame, textvariable=self.sname, font=("Arial", 16), width=20).grid(row=0, column=3, stick=E + W,
                                                                                        pady=10)
 
-        def modify():
-            window = Tk()
-            window.title('Modify student info')
-            center_window(window, 309, 500)
-            Label(window).grid(row=0, stick=W)
-            Label(window, text='Student ID: ', font=("Arial", 12)).grid(row=1, stick=E + W, pady=10)
-            Entry(window, textvariable=self.sid, font=("Arial", 12), width=12).grid(row=1, column=1, stick=E + W,
-                                                                                    pady=10)
-            Label(window, text='Name: ', font=("Arial", 12)).grid(row=2, stick=E + W, pady=10)
-            Entry(window, textvariable=self.sname, font=("Arial", 12), width=12).grid(row=2, column=1, stick=E + W,
-                                                                                      pady=10)
-            Label(window, text='Sex(Male/Female): ', font=("Arial", 12)).grid(row=3, stick=E + W, pady=10)
-            Entry(window, textvariable=self.sex, font=("Arial", 12), width=12).grid(row=3, column=1, stick=E + W,
-                                                                                    pady=10)
-            Label(window, text='Entrance Age: ', font=("Arial", 12)).grid(row=4, stick=E + W, pady=10)
-            Entry(window, textvariable=self.eage, font=("Arial", 12), width=12).grid(row=4, column=1, stick=E + W,
-                                                                                     pady=10)
-            Label(window, text='Entrance Year: ', font=("Arial", 12)).grid(row=5, stick=E + W, pady=10)
-            Entry(window, textvariable=self.eyear, font=("Arial", 12), width=12).grid(row=5, column=1, stick=E + W,
-                                                                                      pady=10)
-            Label(window, text='Class: ', font=("Arial", 12)).grid(row=6, stick=E + W, pady=10)
-            Entry(window, textvariable=self.clss, font=("Arial", 12), width=12).grid(row=6, column=1, stick=E + W,
-                                                                                     pady=10)
-            Label(window, text='Drop Out(Y/N): ', font=("Arial", 12)).grid(row=7, stick=E + W, pady=10)
-            Entry(window, font=("Arial", 12), width=12).grid(row=7, column=1, stick=E + W, pady=10)
+        def modify(table):
+            # window = Tk()
+            # window.title('Modify student info')
+            # center_window(window, 309, 500)
+            # Label(window).grid(row=0, stick=W)
+            #
+            # sql = 'select * from student where studentID = "{}"'.format(stuid)
+            # db_fetch = sql_conn(sql)[0]
+            # self.sid.set(db_fetch[0])
+            # self.sname.set(db_fetch[1])
+            # self.sex.set(db_fetch[2])
+            # self.eage.set(db_fetch[3])
+            # self.eyear.set(db_fetch[4])
+            # self.clss.set(db_fetch[5])
+            #
+            # stuid2 = StringVar()
+            # stuid2.set(stuid)
+            # print(self.sid.get())
+            #
+            # Label(window, text='Student ID: ', font=("Arial", 12)).grid(row=1, stick=E + W, pady=10)
+            # Entry(window, textvariable=stuid2, font=("Arial", 12), width=12).grid(row=1, column=1, stick=E + W,
+            #                                                                         pady=10)
+            # Label(window, text='Name: ', font=("Arial", 12)).grid(row=2, stick=E + W, pady=10)
+            # Entry(window, textvariable=self.sname, font=("Arial", 12), width=12).grid(row=2, column=1, stick=E + W,
+            #                                                                           pady=10)
+            # Label(window, text='Sex(Male/Female): ', font=("Arial", 12)).grid(row=3, stick=E + W, pady=10)
+            # Entry(window, textvariable=self.sex, font=("Arial", 12), width=12).grid(row=3, column=1, stick=E + W,
+            #                                                                         pady=10)
+            # Label(window, text='Entrance Age: ', font=("Arial", 12)).grid(row=4, stick=E + W, pady=10)
+            # Entry(window, textvariable=self.eage, font=("Arial", 12), width=12).grid(row=4, column=1, stick=E + W,
+            #                                                                          pady=10)
+            # Label(window, text='Entrance Year: ', font=("Arial", 12)).grid(row=5, stick=E + W, pady=10)
+            # Entry(window, textvariable=self.eyear, font=("Arial", 12), width=12).grid(row=5, column=1, stick=E + W,
+            #                                                                           pady=10)
+            # Label(window, text='Class: ', font=("Arial", 12)).grid(row=6, stick=E + W, pady=10)
+            # Entry(window, textvariable=self.clss, font=("Arial", 12), width=12).grid(row=6, column=1, stick=E + W,
+            #                                                                          pady=10)
+            # Label(window, text='Drop Out(Y/N): ', font=("Arial", 12)).grid(row=7, stick=E + W, pady=10)
+            # Entry(window, font=("Arial", 12), width=12).grid(row=7, column=1, stick=E + W, pady=10)
+            #
+            # Label(window).grid(row=8, stick=W)
+            # def save_new_student(stuid2):
+            #     print(stuid2.get())
+            #     # save to database
+            #
+            # Button(window, text='Save', command=lambda: save_new_student(stuid2),
+            #        font=("Arial", 16)).grid(row=9, column=0, stick=E, pady=10)
+            sql = 'update student set sex="Female" where studentID="s03"'
+            sql_conn(sql)
+            clear_table(table)
+            sql = 'select * from student'
+            db_fetch = sql_conn(sql)
+            for i in range(len(db_fetch)):
+                table.insert('', i, values=(db_fetch[i][0], db_fetch[i][1],
+                                            db_fetch[i][2], db_fetch[i][3],
+                                            db_fetch[i][4], db_fetch[i][5]))
 
-            Label(window).grid(row=8, stick=W)
 
-            def save_new_student():
-                # save to database
-                pass
-
-            Button(window, text='Save', command=save_new_student,
-                   font=("Arial", 16)).grid(row=9, column=0, stick=E, pady=10)
-
-        Button(query_frame, text='Modify', command=modify,
+        Button(query_frame, text='Modify', command=lambda: modify(table),
                font=("Arial", 16)).grid(row=2, column=1, stick=W, pady=10)
 
-        def delete():
+        def delete(table):
             studentID = ''
             # delete student
+            sql = 'delete from coursechoosing where studentID="s03"'
+            sql_conn(sql)
+            sql = 'delete from student where studentID="s03"'
+            sql_conn(sql)
 
-        Button(query_frame, text='Delete', command=delete,
+            clear_table(table)
+            sql = 'select * from student'
+            db_fetch = sql_conn(sql)
+            for i in range(len(db_fetch)):
+                table.insert('', i, values=(db_fetch[i][0], db_fetch[i][1],
+                                            db_fetch[i][2], db_fetch[i][3],
+                                            db_fetch[i][4], db_fetch[i][5]))
+
+        Button(query_frame, text='Delete', command=lambda: delete(table),
                font=("Arial", 16)).grid(row=2, column=2, stick=W, pady=10)
 
         Label(query_frame).grid(row=3, stick=W)
 
-        def new_student():
-            window = Tk()
-            window.title('New student info')
-            center_window(window, 309, 500)
-            Label(window).grid(row=0, stick=W)
-            Label(window, text='Student ID: ', font=("Arial", 12)).grid(row=1, stick=E + W, pady=10)
-            Entry(window, textvariable=self.sid, font=("Arial", 12), width=12).grid(row=1, column=1, stick=E + W,
-                                                                                    pady=10)
-            Label(window, text='Name: ', font=("Arial", 12)).grid(row=2, stick=E + W, pady=10)
-            Entry(window, textvariable=self.sname, font=("Arial", 12), width=12).grid(row=2, column=1, stick=E + W,
-                                                                                      pady=10)
-            Label(window, text='Sex(Male/Female): ', font=("Arial", 12)).grid(row=3, stick=E + W, pady=10)
-            Entry(window, textvariable=self.sex, font=("Arial", 12), width=12).grid(row=3, column=1, stick=E + W,
-                                                                                    pady=10)
-            Label(window, text='Entrance Age: ', font=("Arial", 12)).grid(row=4, stick=E + W, pady=10)
-            Entry(window, textvariable=self.eage, font=("Arial", 12), width=12).grid(row=4, column=1, stick=E + W,
-                                                                                     pady=10)
-            Label(window, text='Entrance Year: ', font=("Arial", 12)).grid(row=5, stick=E + W, pady=10)
-            Entry(window, textvariable=self.eyear, font=("Arial", 12), width=12).grid(row=5, column=1, stick=E + W,
-                                                                                      pady=10)
-            Label(window, text='Class: ', font=("Arial", 12)).grid(row=6, stick=E + W, pady=10)
-            Entry(window, textvariable=self.clss, font=("Arial", 12), width=12).grid(row=6, column=1, stick=E + W,
-                                                                                     pady=10)
-            Label(window, text='Drop Out(Y/N): ', font=("Arial", 12)).grid(row=7, stick=E + W, pady=10)
-            Entry(window, font=("Arial", 12), width=12).grid(row=7, column=1, stick=E + W, pady=10)
+        def new_student(table):
+            # sid = StringVar()
+            # sname = StringVar()
+            # sex = StringVar()
+            # eage = StringVar()
+            # eyear = StringVar()
+            # clss = StringVar()
+            #
+            # window = Tk()
+            # window.title('New student info')
+            # center_window(window, 309, 500)
+            # Label(window).grid(row=0, stick=W)
+            # Label(window, text='Student ID: ', font=("Arial", 12)).grid(row=1, stick=E + W, pady=10)
+            # Entry(window, textvariable=sid, font=("Arial", 12), width=12).grid(row=1, column=1, stick=E + W,
+            #                                                                         pady=10)
+            # Label(window, text='Name: ', font=("Arial", 12)).grid(row=2, stick=E + W, pady=10)
+            # Entry(window, textvariable=sname, font=("Arial", 12), width=12).grid(row=2, column=1, stick=E + W,
+            #                                                                           pady=10)
+            # Label(window, text='Sex(Male/Female): ', font=("Arial", 12)).grid(row=3, stick=E + W, pady=10)
+            # Entry(window, textvariable=sex, font=("Arial", 12), width=12).grid(row=3, column=1, stick=E + W,
+            #                                                                         pady=10)
+            # Label(window, text='Entrance Age: ', font=("Arial", 12)).grid(row=4, stick=E + W, pady=10)
+            # Entry(window, textvariable=eage, font=("Arial", 12), width=12).grid(row=4, column=1, stick=E + W,
+            #                                                                          pady=10)
+            # Label(window, text='Entrance Year: ', font=("Arial", 12)).grid(row=5, stick=E + W, pady=10)
+            # Entry(window, textvariable=eyear, font=("Arial", 12), width=12).grid(row=5, column=1, stick=E + W,
+            #                                                                           pady=10)
+            # Label(window, text='Class: ', font=("Arial", 12)).grid(row=6, stick=E + W, pady=10)
+            # Entry(window, textvariable=clss, font=("Arial", 12), width=12).grid(row=6, column=1, stick=E + W,
+            #                                                                          pady=10)
+            # Label(window, text='Drop Out(Y/N): ', font=("Arial", 12)).grid(row=7, stick=E + W, pady=10)
+            # Entry(window, font=("Arial", 12), width=12).grid(row=7, column=1, stick=E + W, pady=10)
+            #
+            # Label(window).grid(row=8, stick=W)
 
-            Label(window).grid(row=8, stick=W)
+            # def save_new_student(sid, sname, sex, eage, eyear, clss):
+            #     sql = 'insert into student(studentID, name, sex, entranceAge, entranceYear, class) ' \
+            #           'values ({}, {}, {}, {}, {}, {})'.format(sid,sname, sex, eage, eyear, clss)
+            #     print(sid, sname, sex, eage, eyear, clss)
+            #     print(type(sid))
+            #     print("hi,", sid)
+            #
+            #     # sql_conn(sql)
+            #
+            # Button(window, text='Save', command=lambda: save_new_student(sid.get(),sname.get(), sex.get(), eage.get(), eyear.get(), clss.get()),
+            #        font=("Arial", 16)).grid(row=9, column=0, stick=E, pady=10)
 
-            def save_new_student():
-                # save to database
-                pass
+            sql = 'insert into student(studentID, name, sex, entranceAge, entranceYear, class) ' \
+                  'values ("s03", "Cob", "Male", "20", "2017", "class 01")'
+            sql_conn(sql)
+            clear_table(table)
+            sql = 'select * from student'
+            db_fetch = sql_conn(sql)
+            for i in range(len(db_fetch)):
+                table.insert('', i, values=(db_fetch[i][0], db_fetch[i][1],
+                                            db_fetch[i][2], db_fetch[i][3],
+                                            db_fetch[i][4], db_fetch[i][5]))
 
-            Button(window, text='Save', command=save_new_student,
-                   font=("Arial", 16)).grid(row=9, column=0, stick=E, pady=10)
-
-        Button(query_frame, text='New', command=new_student,
+        Button(query_frame, text='New', command=lambda: new_student(table),
                font=("Arial", 16)).grid(row=5, column=1, stick=W, pady=10)
 
         Button(query_frame, text='Drop out', command='updateFunction',
@@ -244,93 +311,128 @@ class AdminPage(object):
         clear_frame(self.page)
         Label(self.page).grid(row=0, stick=W)
 
-        columns = ('Course ID', 'Course Name', 'Teacher ID', 'Teacher Name', 'Credit', 'Course Grade', 'Canceled Year')
+        columns = ('Course ID', 'Course Name', 'Teacher ID', 'Credit', 'Course Grade', 'Canceled Year')
         table = generate_table(self.page, 1, columns)
+
+        sql = 'select * from course'
+        db_fetch = sql_conn(sql)
+        for i in range(len(db_fetch)):
+            table.insert('', i, values=(db_fetch[i][0], db_fetch[i][1],
+                                        db_fetch[i][2], db_fetch[i][3],
+                                        db_fetch[i][4], db_fetch[i][5]))
+
         query_frame = Frame(self.page)
         query_frame.grid(row=2, stick=W, ipady=10, ipadx=10)
         Label(query_frame, text='Course ID: ', font=("Arial", 16)).grid(row=0, stick=E + W, pady=10)
         Entry(query_frame, textvariable=self.cid, font=("Arial", 16), width=20).grid(row=0, column=1, stick=E + W,
                                                                                      pady=10)
 
-        def modify():
-            window = Tk()
-            window.title('Modify course info')
-            center_window(window, 309, 500)
-            Label(window).grid(row=0, stick=W)
-            Label(window, text='Course ID: ', font=("Arial", 12)).grid(row=1, stick=E + W, pady=10)
-            Entry(window, textvariable=self.cid, font=("Arial", 12), width=12).grid(row=1, column=1, stick=E + W,
-                                                                                    pady=10)
-            Label(window, text='Course Name: ', font=("Arial", 12)).grid(row=2, stick=E + W, pady=10)
-            Entry(window, textvariable=self.cname, font=("Arial", 12), width=12).grid(row=2, column=1, stick=E + W,
-                                                                                      pady=10)
-            Label(window, text='Teacher ID: ', font=("Arial", 12)).grid(row=3, stick=E + W, pady=10)
-            Entry(window, textvariable=self.tid, font=("Arial", 12), width=12).grid(row=3, column=1, stick=E + W,
-                                                                                    pady=10)
-            Label(window, text='Credit: ', font=("Arial", 12)).grid(row=4, stick=E + W, pady=10)
-            Entry(window, textvariable=self.credit, font=("Arial", 12), width=12).grid(row=4, column=1, stick=E + W,
-                                                                                       pady=10)
-            Label(window, text='Course Grade: ', font=("Arial", 12)).grid(row=5, stick=E + W, pady=10)
-            Entry(window, textvariable=self.cgrade, font=("Arial", 12), width=12).grid(row=5, column=1, stick=E + W,
-                                                                                       pady=10)
-            Label(window, text='Canceled Year: ', font=("Arial", 12)).grid(row=6, stick=E + W, pady=10)
-            Entry(window, textvariable=self.cancelYear, font=("Arial", 12), width=12).grid(row=6, column=1, stick=E + W,
-                                                                                           pady=10)
+        def modify(table):
+            # window = Tk()
+            # window.title('Modify course info')
+            # center_window(window, 309, 500)
+            # Label(window).grid(row=0, stick=W)
+            # Label(window, text='Course ID: ', font=("Arial", 12)).grid(row=1, stick=E + W, pady=10)
+            # Entry(window, textvariable=self.cid, font=("Arial", 12), width=12).grid(row=1, column=1, stick=E + W,
+            #                                                                         pady=10)
+            # Label(window, text='Course Name: ', font=("Arial", 12)).grid(row=2, stick=E + W, pady=10)
+            # Entry(window, textvariable=self.cname, font=("Arial", 12), width=12).grid(row=2, column=1, stick=E + W,
+            #                                                                           pady=10)
+            # Label(window, text='Teacher ID: ', font=("Arial", 12)).grid(row=3, stick=E + W, pady=10)
+            # Entry(window, textvariable=self.tid, font=("Arial", 12), width=12).grid(row=3, column=1, stick=E + W,
+            #                                                                         pady=10)
+            # Label(window, text='Credit: ', font=("Arial", 12)).grid(row=4, stick=E + W, pady=10)
+            # Entry(window, textvariable=self.credit, font=("Arial", 12), width=12).grid(row=4, column=1, stick=E + W,
+            #                                                                            pady=10)
+            # Label(window, text='Course Grade: ', font=("Arial", 12)).grid(row=5, stick=E + W, pady=10)
+            # Entry(window, textvariable=self.cgrade, font=("Arial", 12), width=12).grid(row=5, column=1, stick=E + W,
+            #                                                                            pady=10)
+            # Label(window, text='Canceled Year: ', font=("Arial", 12)).grid(row=6, stick=E + W, pady=10)
+            # Entry(window, textvariable=self.cancelYear, font=("Arial", 12), width=12).grid(row=6, column=1, stick=E + W,
+            #                                                                                pady=10)
+            #
+            # Label(window).grid(row=7, stick=W)
+            # def save_new_courses():
+            #     # save to database
+            #     pass
+            #
+            # Button(window, text='Save', command=save_new_courses,
+            #        font=("Arial", 16)).grid(row=8, column=0, stick=E, pady=10)
+            sql = 'update course set name="FFF" where courseID="c03"'
+            sql_conn(sql)
+            clear_table(table)
+            sql = 'select * from course'
+            db_fetch = sql_conn(sql)
+            for i in range(len(db_fetch)):
+                table.insert('', i, values=(db_fetch[i][0], db_fetch[i][1],
+                                            db_fetch[i][2], db_fetch[i][3],
+                                            db_fetch[i][4], db_fetch[i][5]))
 
-            Label(window).grid(row=7, stick=W)
-
-            def save_new_courses():
-                # save to database
-                pass
-
-            Button(window, text='Save', command=save_new_courses,
-                   font=("Arial", 16)).grid(row=8, column=0, stick=E, pady=10)
-
-        Button(query_frame, text='Modify', command=modify,
+        Button(query_frame, text='Modify', command=lambda: modify(table),
                font=("Arial", 16)).grid(row=2, column=1, stick=W, pady=10)
 
-        def delete():
-            teacherID = ''
+        def delete(table):
+            sql = 'delete from course where courseID = "c03"'
+            sql_conn(sql)
+            clear_table(table)
+            sql = 'select * from course'
+            db_fetch = sql_conn(sql)
+            for i in range(len(db_fetch)):
+                table.insert('', i, values=(db_fetch[i][0], db_fetch[i][1],
+                                            db_fetch[i][2], db_fetch[i][3],
+                                            db_fetch[i][4], db_fetch[i][5]))
             # delete student
 
-        Button(query_frame, text='Delete', command=delete,
+        Button(query_frame, text='Delete', command=lambda: delete(table),
                font=("Arial", 16)).grid(row=2, column=2, stick=W, pady=10)
 
         Label(query_frame).grid(row=3, stick=W)
 
-        def new_courses():
-            window = Tk()
-            window.title('New course info')
-            center_window(window, 309, 500)
-            Label(window).grid(row=0, stick=W)
-            Label(window, text='Course ID: ', font=("Arial", 12)).grid(row=1, stick=E + W, pady=10)
-            Entry(window, textvariable=self.cid, font=("Arial", 12), width=12).grid(row=1, column=1, stick=E + W,
-                                                                                    pady=10)
-            Label(window, text='Course Name: ', font=("Arial", 12)).grid(row=2, stick=E + W, pady=10)
-            Entry(window, textvariable=self.cname, font=("Arial", 12), width=12).grid(row=2, column=1, stick=E + W,
-                                                                                      pady=10)
-            Label(window, text='Teacher ID: ', font=("Arial", 12)).grid(row=3, stick=E + W, pady=10)
-            Entry(window, textvariable=self.tid, font=("Arial", 12), width=12).grid(row=3, column=1, stick=E + W,
-                                                                                    pady=10)
-            Label(window, text='Credit: ', font=("Arial", 12)).grid(row=4, stick=E + W, pady=10)
-            Entry(window, textvariable=self.credit, font=("Arial", 12), width=12).grid(row=4, column=1, stick=E + W,
-                                                                                       pady=10)
-            Label(window, text='Course Grade: ', font=("Arial", 12)).grid(row=5, stick=E + W, pady=10)
-            Entry(window, textvariable=self.cgrade, font=("Arial", 12), width=12).grid(row=5, column=1, stick=E + W,
-                                                                                       pady=10)
-            Label(window, text='Canceled Year: ', font=("Arial", 12)).grid(row=6, stick=E + W, pady=10)
-            Entry(window, textvariable=self.cancelYear, font=("Arial", 12), width=12).grid(row=6, column=1, stick=E + W,
-                                                                                           pady=10)
+        def new_courses(table):
+            # window = Tk()
+            # window.title('New course info')
+            # center_window(window, 309, 500)
+            # Label(window).grid(row=0, stick=W)
+            # Label(window, text='Course ID: ', font=("Arial", 12)).grid(row=1, stick=E + W, pady=10)
+            # Entry(window, textvariable=self.cid, font=("Arial", 12), width=12).grid(row=1, column=1, stick=E + W,
+            #                                                                         pady=10)
+            # Label(window, text='Course Name: ', font=("Arial", 12)).grid(row=2, stick=E + W, pady=10)
+            # Entry(window, textvariable=self.cname, font=("Arial", 12), width=12).grid(row=2, column=1, stick=E + W,
+            #                                                                           pady=10)
+            # Label(window, text='Teacher ID: ', font=("Arial", 12)).grid(row=3, stick=E + W, pady=10)
+            # Entry(window, textvariable=self.tid, font=("Arial", 12), width=12).grid(row=3, column=1, stick=E + W,
+            #                                                                         pady=10)
+            # Label(window, text='Credit: ', font=("Arial", 12)).grid(row=4, stick=E + W, pady=10)
+            # Entry(window, textvariable=self.credit, font=("Arial", 12), width=12).grid(row=4, column=1, stick=E + W,
+            #                                                                            pady=10)
+            # Label(window, text='Course Grade: ', font=("Arial", 12)).grid(row=5, stick=E + W, pady=10)
+            # Entry(window, textvariable=self.cgrade, font=("Arial", 12), width=12).grid(row=5, column=1, stick=E + W,
+            #                                                                            pady=10)
+            # Label(window, text='Canceled Year: ', font=("Arial", 12)).grid(row=6, stick=E + W, pady=10)
+            # Entry(window, textvariable=self.cancelYear, font=("Arial", 12), width=12).grid(row=6, column=1, stick=E + W,
+            #                                                                                pady=10)
+            #
+            # Label(window).grid(row=7, stick=W)
+            #
+            # def save_new_courses():
+            #     # save to database
+            #     pass
+            #
+            # Button(window, text='Save', command=save_new_courses,
+            #        font=("Arial", 16)).grid(row=8, column=0, stick=E, pady=10)
+            sql = 'insert into course(courseID, name, teacherID, credit, grade, canceledYear) ' \
+                  'values ("c03", "E++", "t02", "1", "1", "2049")'
 
-            Label(window).grid(row=7, stick=W)
+            sql_conn(sql)
+            clear_table(table)
+            sql = 'select * from course'
+            db_fetch = sql_conn(sql)
+            for i in range(len(db_fetch)):
+                table.insert('', i, values=(db_fetch[i][0], db_fetch[i][1],
+                                            db_fetch[i][2], db_fetch[i][3],
+                                            db_fetch[i][4], db_fetch[i][5]))
 
-            def save_new_courses():
-                # save to database
-                pass
-
-            Button(window, text='Save', command=save_new_courses,
-                   font=("Arial", 16)).grid(row=8, column=0, stick=E, pady=10)
-
-        Button(query_frame, text='New', command=new_courses,
+        Button(query_frame, text='New', command=lambda: new_courses(table),
                font=("Arial", 16)).grid(row=5, column=1, stick=W, pady=10)
 
         # course_data()
@@ -342,6 +444,15 @@ class AdminPage(object):
 
         columns = ('Student ID', 'Student Name', 'Course ID', 'Course Name', 'Chosen Year')
         table = generate_table(self.page, 1, columns)
+
+        sql = 'select * from coursechoosing'
+        db_fetch = sql_conn(sql)
+        for i in range(len(db_fetch)):
+            table.insert('', i, values=(db_fetch[i][0], db_fetch[i][1],
+                                        db_fetch[i][2], db_fetch[i][3],
+                                        db_fetch[i][4]))
+
+
         query_frame = Frame(self.page)
         query_frame.grid(row=2, stick=W, ipady=10, ipadx=10)
         Label(query_frame, text='Student ID: ', font=("Arial", 16)).grid(row=0, stick=E + W, pady=10)
@@ -351,68 +462,94 @@ class AdminPage(object):
         Entry(query_frame, textvariable=self.cid, font=("Arial", 16), width=20).grid(row=0, column=3, stick=E + W,
                                                                                      pady=10)
 
-        def modify():
-            window = Tk()
-            window.title('Modify course choosing info')
-            center_window(window, 309, 500)
-            Label(window).grid(row=0, stick=W)
-            Label(window, text='Student ID: ', font=("Arial", 12)).grid(row=1, stick=E + W, pady=10)
-            Entry(window, textvariable=self.sid, font=("Arial", 12), width=12).grid(row=1, column=1, stick=E + W,
-                                                                                    pady=10)
-            Label(window, text='Course ID: ', font=("Arial", 12)).grid(row=2, stick=E + W, pady=10)
-            Entry(window, textvariable=self.cid, font=("Arial", 12), width=12).grid(row=2, column=1, stick=E + W,
-                                                                                    pady=10)
-            Label(window, text='Chosen Year: ', font=("Arial", 12)).grid(row=3, stick=E + W, pady=10)
-            Entry(window, textvariable=self.chosenYear, font=("Arial", 12), width=12).grid(row=3, column=1, stick=E + W,
-                                                                                           pady=10)
+        def modify(table):
+            # window = Tk()
+            # window.title('Modify course choosing info')
+            # center_window(window, 309, 500)
+            # Label(window).grid(row=0, stick=W)
+            # Label(window, text='Student ID: ', font=("Arial", 12)).grid(row=1, stick=E + W, pady=10)
+            # Entry(window, textvariable=self.sid, font=("Arial", 12), width=12).grid(row=1, column=1, stick=E + W,
+            #                                                                         pady=10)
+            # Label(window, text='Course ID: ', font=("Arial", 12)).grid(row=2, stick=E + W, pady=10)
+            # Entry(window, textvariable=self.cid, font=("Arial", 12), width=12).grid(row=2, column=1, stick=E + W,
+            #                                                                         pady=10)
+            # Label(window, text='Chosen Year: ', font=("Arial", 12)).grid(row=3, stick=E + W, pady=10)
+            # Entry(window, textvariable=self.chosenYear, font=("Arial", 12), width=12).grid(row=3, column=1, stick=E + W,
+            #                                                                                pady=10)
+            #
+            # Label(window).grid(row=4, stick=W)
+            #
+            # def save_new_course_choosing():
+            #     # save to database
+            #     pass
+            #
+            # Button(window, text='Save', command=save_new_course_choosing,
+            #        font=("Arial", 16)).grid(row=5, column=0, stick=E, pady=10)
+            sql = 'update coursechoosing set chosenYear="1999" where studentID="s03" and courseID="c03"'
+            sql_conn(sql)
+            clear_table(table)
+            sql = 'select * from coursechoosing'
+            db_fetch = sql_conn(sql)
+            for i in range(len(db_fetch)):
+                table.insert('', i, values=(db_fetch[i][0], db_fetch[i][1],
+                                            db_fetch[i][2], db_fetch[i][3],
+                                            db_fetch[i][4]))
 
-            Label(window).grid(row=4, stick=W)
-
-            def save_new_course_choosing():
-                # save to database
-                pass
-
-            Button(window, text='Save', command=save_new_course_choosing,
-                   font=("Arial", 16)).grid(row=5, column=0, stick=E, pady=10)
-
-        Button(query_frame, text='Modify', command=modify,
+        Button(query_frame, text='Modify', command=lambda: modify(table),
                font=("Arial", 16)).grid(row=2, column=1, stick=W, pady=10)
 
-        def delete():
-            studentID = ''
-            courseID = ''
+        def delete(table):
+            sql = 'delete from coursechoosing where courseID="c03" and studentID = "s03"'
+            sql_conn(sql)
+            clear_table(table)
+            sql = 'select * from coursechoosing'
+            db_fetch = sql_conn(sql)
+            for i in range(len(db_fetch)):
+                table.insert('', i, values=(db_fetch[i][0], db_fetch[i][1],
+                                            db_fetch[i][2], db_fetch[i][3],
+                                            db_fetch[i][4]))
             # delete student
 
-        Button(query_frame, text='Delete', command=delete,
+        Button(query_frame, text='Delete', command=lambda: delete(table),
                font=("Arial", 16)).grid(row=2, column=2, stick=W, pady=10)
 
         Label(query_frame).grid(row=3, stick=W)
 
-        def new_course_choosing():
-            window = Tk()
-            window.title('New student info')
-            center_window(window, 309, 500)
-            Label(window).grid(row=0, stick=W)
-            Label(window, text='Student ID: ', font=("Arial", 12)).grid(row=1, stick=E + W, pady=10)
-            Entry(window, textvariable=self.sid, font=("Arial", 12), width=12).grid(row=1, column=1, stick=E + W,
-                                                                                    pady=10)
-            Label(window, text='Course ID: ', font=("Arial", 12)).grid(row=2, stick=E + W, pady=10)
-            Entry(window, textvariable=self.cid, font=("Arial", 12), width=12).grid(row=2, column=1, stick=E + W,
-                                                                                    pady=10)
-            Label(window, text='Chosen Year: ', font=("Arial", 12)).grid(row=3, stick=E + W, pady=10)
-            Entry(window, textvariable=self.chosenYear, font=("Arial", 12), width=12).grid(row=3, column=1, stick=E + W,
-                                                                                           pady=10)
+        def new_course_choosing(table):
+            # window = Tk()
+            # window.title('New student info')
+            # center_window(window, 309, 500)
+            # Label(window).grid(row=0, stick=W)
+            # Label(window, text='Student ID: ', font=("Arial", 12)).grid(row=1, stick=E + W, pady=10)
+            # Entry(window, textvariable=self.sid, font=("Arial", 12), width=12).grid(row=1, column=1, stick=E + W,
+            #                                                                         pady=10)
+            # Label(window, text='Course ID: ', font=("Arial", 12)).grid(row=2, stick=E + W, pady=10)
+            # Entry(window, textvariable=self.cid, font=("Arial", 12), width=12).grid(row=2, column=1, stick=E + W,
+            #                                                                         pady=10)
+            # Label(window, text='Chosen Year: ', font=("Arial", 12)).grid(row=3, stick=E + W, pady=10)
+            # Entry(window, textvariable=self.chosenYear, font=("Arial", 12), width=12).grid(row=3, column=1, stick=E + W,
+            #                                                                                pady=10)
+            #
+            # Label(window).grid(row=4, stick=W)
+            #
+            # def save_new_course_choosing():
+            #     # save to database
+            #     pass
+            #
+            # Button(window, text='Save', command=save_new_course_choosing,
+            #        font=("Arial", 16)).grid(row=5, column=0, stick=E, pady=10)
+            sql = 'insert into coursechoosing(studentID, courseID, teacherID, chosenYear, score) ' \
+                  'values ("s03", "c03", "t02", "2019", "60")'
+            sql_conn(sql)
+            clear_table(table)
+            sql = 'select * from coursechoosing'
+            db_fetch = sql_conn(sql)
+            for i in range(len(db_fetch)):
+                table.insert('', i, values=(db_fetch[i][0], db_fetch[i][1],
+                                            db_fetch[i][2], db_fetch[i][3],
+                                            db_fetch[i][4]))
 
-            Label(window).grid(row=4, stick=W)
-
-            def save_new_course_choosing():
-                # save to database
-                pass
-
-            Button(window, text='Save', command=save_new_course_choosing,
-                   font=("Arial", 16)).grid(row=5, column=0, stick=E, pady=10)
-
-        Button(query_frame, text='New', command=new_course_choosing,
+        Button(query_frame, text='New', command=lambda: new_course_choosing(table),
                font=("Arial", 16)).grid(row=5, column=1, stick=W, pady=10)
 
         # scores_data()
@@ -578,6 +715,10 @@ class AdminPage(object):
             elif len(clss) != 0:
                 sql = 'select avg(coursechoosing.score) from coursechoosing, student where ' \
                       'student.class="'+clss+'" and coursechoosing.studentID = student.studentID'
+                db_fetch = sql_conn(sql)
+                avg.set(db_fetch[0][0])
+            else:
+                sql = 'select avg(coursechoosing.score) from coursechoosing'
                 db_fetch = sql_conn(sql)
                 avg.set(db_fetch[0][0])
 
