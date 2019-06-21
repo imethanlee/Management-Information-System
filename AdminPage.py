@@ -299,6 +299,10 @@ class AdminPage(object):
                font=("Arial", 16)).grid(row=2, column=1, stick=W, pady=10)
 
         def delete():
+
+            sql = 'delete from coursechoosing where teacherID="{}"'.format(self.tid.get())
+            sql_conn(sql)
+
             sql = 'delete from teacher where teacherID="{}" or name="{}"'.format(self.tid.get(), self.tname.get())
             sql_conn(sql)
 
@@ -335,6 +339,12 @@ class AdminPage(object):
                       'values ("{}", "{}", "{}")' \
                     .format(self.tid.get(), self.tname.get(), self.cname.get())
                 sql_conn(sql)
+
+                sql = 'insert into user(usertype, username, password) ' \
+                      'values ("teacher", "{}", "{}")' \
+                    .format(self.tid.get(), self.tid.get())
+                sql_conn(sql)
+
 
                 clear_table(table)
                 sql = 'select * from teacher'
@@ -435,8 +445,10 @@ class AdminPage(object):
                font=("Arial", 16)).grid(row=2, column=1, stick=W, pady=10)
 
         def delete(table):
-            sql = 'delete from course where courseID="{}" or name="{}"'\
-                .format(self.cid.get(), self.cname.get())
+            sql = 'delete from coursechoosing where courseID="{}"'.format(self.cid.get())
+            sql_conn(sql)
+
+            sql = 'delete from course where courseID="{}" or name="{}"'.format(self.cid.get(), self.cname.get())
             sql_conn(sql)
             clear_table(table)
             sql = 'select * from course'
@@ -662,8 +674,18 @@ class AdminPage(object):
             clear_table(table)
             student = self.student.get()
             course = self.course.get()
+            if len(student) == 0 and len(course) == 0:
+                sql = 'select student.studentID, student.name, course.courseID, course.name, course.credit, coursechoosing.score from ' \
+                      'student, course, coursechoosing where ' \
+                      '(coursechoosing.studentID=student.studentID and ' \
+                      'coursechoosing.courseID=course.courseID)'
+                db_fetch = sql_conn(sql)
+                for i in range(len(db_fetch)):
+                    table.insert('', i, values=(db_fetch[i][0], db_fetch[i][1],
+                                                db_fetch[i][2], db_fetch[i][3],
+                                                db_fetch[i][4], db_fetch[i][5]))
 
-            if len(student) != 0 and len(course) == 0:
+            elif len(student) != 0 and len(course) == 0:
                 sql = 'select student.studentID, student.name, course.courseID, course.name, course.credit, coursechoosing.score from ' \
                       'student, course, coursechoosing where ' \
                       '(coursechoosing.studentID=student.studentID and ' \
@@ -711,16 +733,27 @@ class AdminPage(object):
             student = self.student.get()
             course = self.course.get()
 
-            sql = 'select course.courseID, course.name, student.studentID, student.name, course.credit, coursechoosing.score from ' \
+            if len(course) == 0:
+                sql = 'select course.courseID, course.name, student.studentID, student.name, course.credit, coursechoosing.score from ' \
+                      'student, course, coursechoosing where ' \
+                      '(coursechoosing.studentID=student.studentID and ' \
+                      'coursechoosing.courseID=course.courseID)'
+                db_fetch = sql_conn(sql)
+                for i in range(len(db_fetch)):
+                    table.insert('', i, values=(db_fetch[i][0], db_fetch[i][1],
+                                                db_fetch[i][2], db_fetch[i][3],
+                                                db_fetch[i][4], db_fetch[i][5]))
+            else:
+                sql = 'select course.courseID, course.name, student.studentID, student.name, course.credit, coursechoosing.score from ' \
                       'student, course, coursechoosing where ' \
                       '(coursechoosing.studentID=student.studentID and ' \
                       'coursechoosing.courseID=course.courseID) and ' \
                       '(course.courseID="' + course + '" or course.name="' + course + '")'
-            db_fetch = sql_conn(sql)
-            for i in range(len(db_fetch)):
-                table.insert('', i, values=(db_fetch[i][0], db_fetch[i][1],
-                                            db_fetch[i][2], db_fetch[i][3],
-                                            db_fetch[i][4], db_fetch[i][5]))
+                db_fetch = sql_conn(sql)
+                for i in range(len(db_fetch)):
+                    table.insert('', i, values=(db_fetch[i][0], db_fetch[i][1],
+                                                db_fetch[i][2], db_fetch[i][3],
+                                                db_fetch[i][4], db_fetch[i][5]))
 
         Button(query_frame, text='Search', command=click5,
                font=("Arial", 16)).grid(row=2, column=1, stick=W, pady=10)
@@ -744,15 +777,25 @@ class AdminPage(object):
             clear_table(table)
             teacher = self.teacher.get()
 
-            sql = 'select teacher.teacherID, teacher.name, course.courseID, course.name, course.credit, course.canceledYear from ' \
-                  'teacher, course where ' \
-                  '(teacher.teacherID=course.teacherID) and ' \
-                  '(teacher.teacherID="' + teacher + '" or teacher.name="' + teacher + '")'
-            db_fetch = sql_conn(sql)
-            for i in range(len(db_fetch)):
-                table.insert('', i, values=(db_fetch[i][0], db_fetch[i][1],
-                                            db_fetch[i][2], db_fetch[i][3],
-                                            db_fetch[i][4], db_fetch[i][5]))
+            if len(teacher) == 0:
+                sql = 'select teacher.teacherID, teacher.name, course.courseID, course.name, course.credit, course.canceledYear from ' \
+                      'teacher, course where ' \
+                      '(teacher.teacherID=course.teacherID)'
+                db_fetch = sql_conn(sql)
+                for i in range(len(db_fetch)):
+                    table.insert('', i, values=(db_fetch[i][0], db_fetch[i][1],
+                                                db_fetch[i][2], db_fetch[i][3],
+                                                db_fetch[i][4], db_fetch[i][5]))
+            else:
+                sql = 'select teacher.teacherID, teacher.name, course.courseID, course.name, course.credit, course.canceledYear from ' \
+                      'teacher, course where ' \
+                      '(teacher.teacherID=course.teacherID) and ' \
+                      '(teacher.teacherID="' + teacher + '" or teacher.name="' + teacher + '")'
+                db_fetch = sql_conn(sql)
+                for i in range(len(db_fetch)):
+                    table.insert('', i, values=(db_fetch[i][0], db_fetch[i][1],
+                                                db_fetch[i][2], db_fetch[i][3],
+                                                db_fetch[i][4], db_fetch[i][5]))
 
         Button(query_frame, text='Search', command=click6,
                font=("Arial", 16)).grid(row=2, column=1, stick=W, pady=10)

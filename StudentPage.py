@@ -74,12 +74,15 @@ class StudentPage(object):
         columns = ('Course Name', 'Teacher Name', 'Credit', 'Course Grade', 'Chosen Year', 'Score')
         table = generate_table(self.page, 1, columns)
         # scores_data()
-        avg = 0.0
+
         for i in range(len(db_fetch)):
             table.insert('', i, values=(db_fetch[i][0], db_fetch[i][1],
                                         db_fetch[i][2], db_fetch[i][3],
                                         db_fetch[i][4], db_fetch[i][5]))
-            avg += db_fetch[i][5] / len(db_fetch)
+        sql = 'select avg(coursechoosing.score) from ' \
+              'course, teacher, coursechoosing where coursechoosing.studentID="'+GlobalVar.login_id+'" and ' \
+              'teacher.teacherID=coursechoosing.teacherID and course.courseID=coursechoosing.courseID'
+        avg = sql_conn(sql)[0][0]
 
         Label(self.page, text='Average Score: ', font=("Arial", 12)).grid(row=2, stick=E, pady=10)
         Label(self.page, text='{}'.format(avg), font=("Arial", 12)).grid(row=2, column=1, stick=W, pady=10)
