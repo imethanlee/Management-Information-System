@@ -54,6 +54,12 @@ def generate_table(root, gird_row, columns):
     return table
 
 
+def clear_table(table):
+    x = table.get_children()
+    for item in x:
+        table.delete(item)
+
+
 def handler_adaptor(fun, **kwds):
     """事件处理函数的适配器，相当于中介，那个event是从那里来的呢，我也纳闷，这也许就是python的伟大之处吧"""
     return lambda event, fun=fun, kwds=kwds: fun(event, **kwds)
