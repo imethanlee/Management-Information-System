@@ -59,6 +59,7 @@ class AdminPage(object):
         columns = ('Student ID', 'Name', 'Sex', 'Entrance Age', 'Entrance Year',
                    'Class')
         table = generate_table(self.page, 1, columns)
+
         sql = 'select * from student'
         db_fetch = sql_conn(sql)
         for i in range(len(db_fetch)):
@@ -81,7 +82,7 @@ class AdminPage(object):
             center_window(window, 309, 500)
             Label(window).grid(row=0, stick=W)
 
-            sql = 'select * from student where studentID = "{}"'.format(self.sid.get())
+            sql = 'select * from student where studentID = "{}" or name="{}"'.format(self.sid.get(), self.sname.get())
             db_fetch = sql_conn(sql)[0]
             self.sid.set(db_fetch[0])
             self.sname.set(db_fetch[1])
@@ -142,6 +143,8 @@ class AdminPage(object):
             studentID = ''
             # delete student
             sql = 'delete from coursechoosing where studentID="{}"'.format(self.sid.get())
+            sql_conn(sql)
+            sql = 'delete from user where username="{}"'.format(self.sid.get())
             sql_conn(sql)
             sql = 'delete from student where studentID="{}" or name="{}"'.format(self.sid.get(), self.sname.get())
             sql_conn(sql)
@@ -235,9 +238,15 @@ class AdminPage(object):
     def teachers_page(self):
         clear_frame(self.page)
         Label(self.page).grid(row=0, stick=W)
-
         columns = ('Teacher ID', 'Teacher Name', 'Courses')
         table = generate_table(self.page, 1, columns)
+
+        sql = 'select * from teacher'
+        db_fetch = sql_conn(sql)
+        for i in range(len(db_fetch)):
+            table.insert('', i, values=(db_fetch[i][0], db_fetch[i][1], db_fetch[i][2]))
+
+
         query_frame = Frame(self.page)
         query_frame.grid(row=2, stick=W, ipady=10, ipadx=10)
         Label(query_frame, text='Teacher ID: ', font=("Arial", 16)).grid(row=0, stick=E + W, pady=10)
@@ -251,6 +260,13 @@ class AdminPage(object):
             window = Toplevel()
             window.title('Modify teacher info')
             center_window(window, 309, 500)
+
+            sql = 'select * from teacher where teacherID = "{}" or name="{}"'.format(self.tid.get(), self.tname.get())
+            db_fetch = sql_conn(sql)[0]
+            self.tid.set(db_fetch[0])
+            self.tname.set(db_fetch[1])
+            self.cname.set(db_fetch[2])
+
             Label(window).grid(row=0, stick=W)
             Label(window, text='Teacher ID: ', font=("Arial", 12)).grid(row=1, stick=E + W, pady=10)
             Entry(window, textvariable=self.tid, font=("Arial", 12), width=12).grid(row=1, column=1, stick=E + W,
@@ -265,8 +281,16 @@ class AdminPage(object):
             Label(window).grid(row=4, stick=W)
 
             def save_new_teacher():
-                # save to database
-                pass
+                sql = 'update teacher set name="{}", course="{}" where teacherID="{}"'\
+                    .format(self.tname.get(), self.cname.get(), self.tid.get())
+                sql_conn(sql)
+
+                clear_table(table)
+                sql = 'select * from teacher'
+                db_fetch = sql_conn(sql)
+                for i in range(len(db_fetch)):
+                    table.insert('', i, values=(db_fetch[i][0], db_fetch[i][1], db_fetch[i][2]))
+                window.destroy()
 
             Button(window, text='Save', command=save_new_teacher,
                    font=("Arial", 16)).grid(row=5, column=0, stick=E, pady=10)
@@ -275,8 +299,14 @@ class AdminPage(object):
                font=("Arial", 16)).grid(row=2, column=1, stick=W, pady=10)
 
         def delete():
-            teacherID = ''
-            # delete student
+            sql = 'delete from teacher where teacherID="{}" or name="{}"'.format(self.tid.get(), self.tname.get())
+            sql_conn(sql)
+
+            clear_table(table)
+            sql = 'select * from teacher'
+            db_fetch = sql_conn(sql)
+            for i in range(len(db_fetch)):
+                table.insert('', i, values=(db_fetch[i][0], db_fetch[i][1], db_fetch[i][2]))
 
         Button(query_frame, text='Delete', command=delete,
                font=("Arial", 16)).grid(row=2, column=2, stick=W, pady=10)
@@ -301,8 +331,19 @@ class AdminPage(object):
             Label(window).grid(row=4, stick=W)
 
             def save_new_teacher():
-                # save to database
-                pass
+                sql = 'insert into teacher(teacherID, name, course) ' \
+                      'values ("{}", "{}", "{}")' \
+                    .format(self.tid.get(), self.tname.get(), self.cname.get())
+                sql_conn(sql)
+
+                clear_table(table)
+                sql = 'select * from teacher'
+                db_fetch = sql_conn(sql)
+                for i in range(len(db_fetch)):
+                    table.insert('', i, values=(db_fetch[i][0], db_fetch[i][1],
+                                                db_fetch[i][2]))
+                sql_conn(sql)
+                window.destroy()
 
             Button(window, text='Save', command=save_new_teacher,
                    font=("Arial", 16)).grid(row=5, column=0, stick=E, pady=10)

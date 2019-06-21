@@ -25,9 +25,9 @@ def clear_frame(root):
 
 
 def sql_conn(sql):
-    # db = pymysql.connect("localhost", "root", "46281234", "mis")
-    db = pymysql.connect(host="78.141.208.185", user="root", port=33066,
-                         password="scut-2019-DATABASE", db="mis")
+    db = pymysql.connect("localhost", "root", "46281234", "mis")
+    # db = pymysql.connect(host="78.141.208.185", user="root", port=33066,
+    #                      password="scut-2019-DATABASE", db="mis")
     cursor = db.cursor()
     cursor.execute(sql)
     ret = cursor.fetchall()
