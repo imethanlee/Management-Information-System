@@ -26,7 +26,6 @@ class StudentPage(object):
         # get data from database
         sql = 'select * from student where student.studentID="'+GlobalVar.login_id+'"'
         db_fetch = sql_conn(sql)[0]
-        print(db_fetch)
 
         # ID, Name, Sex, Entrance Age, Entrance Year, Class, Grade [7]
         info_head = ['ID', 'Name', 'Sex', 'Entrance Age', 'Entrance Year', 'Class', 'Grade']

@@ -1,8 +1,8 @@
 import time
-
+import re
 import pymysql
 from tkinter import *
-from tkinter import ttk
+from tkinter import ttk, messagebox
 from tkinter.ttk import Treeview
 
 
@@ -92,15 +92,20 @@ def set_cell_value(event, treeview, scene, editcol=None):  # 双击进入编辑�
     entryedit.place(x=(cn - 1) * wide, y=6 + rn * 20)
 
     def saveedit():
-        treeview.set(item, column=column, value=entryedit.get(0.0, "end"))
         if scene == 'teacher_score':
             # Update to database
             cid = item_text[0]
             sid = item_text[2]
+            value = re.compile(r'^[1-9]?[0-9]+\.?[0-9]?$')
             new_val = entryedit.get(0.0, "end")
-            sql = 'update coursechoosing set score=' + new_val + ' where courseID="' + cid + '" ' \
-                                                                                             'and studentID="' + sid + '"'
-            sql_conn(sql)
+            result = value.match(new_val)
+            if result:
+                treeview.set(item, column=column, value=entryedit.get(0.0, "end"))
+                sql = 'update coursechoosing set score=' + new_val + ' where courseID="' + cid + '" ' \
+                                                                                                 'and studentID="' + sid + '"'
+                sql_conn(sql)
+            else:
+                messagebox.showinfo('Error', 'Please input a number from 0.0 to 100.0')
 
         entryedit.destroy()
         okb1.destroy()
@@ -136,8 +141,8 @@ class Watch(Frame):
         self.grid()
 
     def makeWidgets(self):
-        l1 = Label(self, textvariable=self.timestr1, font=("Arial", 24))
-        l2 = Label(self, textvariable=self.timestr2, font=("Arial", 24))
+        l1 = Label(self, textvariable=self.timestr1, font=("Arial", 32))
+        l2 = Label(self, textvariable=self.timestr2, font=("Arial", 32))
         l1.pack()
         l2.pack()
 

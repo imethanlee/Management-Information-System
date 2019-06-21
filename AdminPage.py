@@ -77,6 +77,9 @@ class AdminPage(object):
                                                                                        pady=10)
 
         def modify(table):
+            if not self.sid.get() or not self.sname.get():
+                showinfo('Error', 'Please input student id or name to modify.')
+                return
             window = Toplevel()
             window.title('Modify student info')
             center_window(window, 309, 500)
@@ -92,7 +95,7 @@ class AdminPage(object):
             self.clss.set(db_fetch[5])
 
             Label(window, text='Student ID: ', font=("Arial", 12)).grid(row=1, stick=E + W, pady=10)
-            Entry(window, textvariable=self.sid, font=("Arial", 12), width=12).grid(row=1, column=1, stick=E + W,
+            Label(window, textvariable=self.sid, font=("Arial", 12), width=12).grid(row=1, column=1, stick=E + W,
                                                                                     pady=10)
             Label(window, text='Name: ', font=("Arial", 12)).grid(row=2, stick=E + W, pady=10)
             Entry(window, textvariable=self.sname, font=("Arial", 12), width=12).grid(row=2, column=1, stick=E + W,
@@ -109,8 +112,8 @@ class AdminPage(object):
             Label(window, text='Class: ', font=("Arial", 12)).grid(row=6, stick=E + W, pady=10)
             Entry(window, textvariable=self.clss, font=("Arial", 12), width=12).grid(row=6, column=1, stick=E + W,
                                                                                      pady=10)
-            Label(window, text='Drop Out(Y/N): ', font=("Arial", 12)).grid(row=7, stick=E + W, pady=10)
-            Entry(window, font=("Arial", 12), width=12).grid(row=7, column=1, stick=E + W, pady=10)
+            # Label(window, text='Drop Out(Y/N): ', font=("Arial", 12)).grid(row=7, stick=E + W, pady=10)
+            # Entry(window, font=("Arial", 12), width=12).grid(row=7, column=1, stick=E + W, pady=10)
 
             Label(window).grid(row=8, stick=W)
 
@@ -135,13 +138,13 @@ class AdminPage(object):
             Button(window, text='Save', command=lambda: save_new_student(table),
                    font=("Arial", 16)).grid(row=9, column=0, stick=E, pady=10)
 
-
         Button(query_frame, text='Modify', command=lambda: modify(table),
                font=("Arial", 16)).grid(row=2, column=1, stick=W, pady=10)
 
         def delete(table):
-            studentID = ''
-            # delete student
+            if not self.sid.get() or not self.sname.get():
+                showinfo('Error', 'Please input student id to delete.')
+                return
             sql = 'delete from coursechoosing where studentID="{}"'.format(self.sid.get())
             sql_conn(sql)
             sql = 'delete from user where username="{}"'.format(self.sid.get())
@@ -193,8 +196,8 @@ class AdminPage(object):
             Label(window, text='Class: ', font=("Arial", 12)).grid(row=6, stick=E + W, pady=10)
             Entry(window, textvariable=self.clss, font=("Arial", 12), width=12).grid(row=6, column=1, stick=E + W,
                                                                                      pady=10)
-            Label(window, text='Drop Out(Y/N): ', font=("Arial", 12)).grid(row=7, stick=E + W, pady=10)
-            Entry(window, font=("Arial", 12), width=12).grid(row=7, column=1, stick=E + W, pady=10)
+            # Label(window, text='Drop Out(Y/N): ', font=("Arial", 12)).grid(row=7, stick=E + W, pady=10)
+            # Entry(window, font=("Arial", 12), width=12).grid(row=7, column=1, stick=E + W, pady=10)
 
             Label(window).grid(row=8, stick=W)
 
@@ -229,8 +232,8 @@ class AdminPage(object):
         Button(query_frame, text='New', command=lambda: new_student(table),
                font=("Arial", 16)).grid(row=5, column=1, stick=W, pady=10)
 
-        Button(query_frame, text='Drop out', command='updateFunction',
-               font=("Arial", 16)).grid(row=5, column=2, stick=W, pady=10)
+        # Button(query_frame, text='Drop out', command='updateFunction',
+        #        font=("Arial", 16)).grid(row=5, column=2, stick=W, pady=10)
 
         # course_data()
         self.page.pack()
@@ -246,7 +249,6 @@ class AdminPage(object):
         for i in range(len(db_fetch)):
             table.insert('', i, values=(db_fetch[i][0], db_fetch[i][1], db_fetch[i][2]))
 
-
         query_frame = Frame(self.page)
         query_frame.grid(row=2, stick=W, ipady=10, ipadx=10)
         Label(query_frame, text='Teacher ID: ', font=("Arial", 16)).grid(row=0, stick=E + W, pady=10)
@@ -257,6 +259,9 @@ class AdminPage(object):
                                                                                        pady=10)
 
         def modify():
+            if not self.sid.get() or not self.sname.get():
+                showinfo('Error', 'Please input teacher  or name to modify.')
+                return
             window = Toplevel()
             window.title('Modify teacher info')
             center_window(window, 309, 500)
@@ -269,7 +274,7 @@ class AdminPage(object):
 
             Label(window).grid(row=0, stick=W)
             Label(window, text='Teacher ID: ', font=("Arial", 12)).grid(row=1, stick=E + W, pady=10)
-            Entry(window, textvariable=self.tid, font=("Arial", 12), width=12).grid(row=1, column=1, stick=E + W,
+            Label(window, textvariable=self.tid, font=("Arial", 12), width=12).grid(row=1, column=1, stick=E + W,
                                                                                     pady=10)
             Label(window, text='Teacher Name: ', font=("Arial", 12)).grid(row=2, stick=E + W, pady=10)
             Entry(window, textvariable=self.tname, font=("Arial", 12), width=12).grid(row=2, column=1, stick=E + W,
@@ -299,6 +304,9 @@ class AdminPage(object):
                font=("Arial", 16)).grid(row=2, column=1, stick=W, pady=10)
 
         def delete():
+            if not self.sid.get() or not self.sname.get():
+                showinfo('Error', 'Please input teacher id to delete.')
+                return
 
             sql = 'delete from coursechoosing where teacherID="{}"'.format(self.tid.get())
             sql_conn(sql)
@@ -345,7 +353,6 @@ class AdminPage(object):
                     .format(self.tid.get(), self.tid.get())
                 sql_conn(sql)
 
-
                 clear_table(table)
                 sql = 'select * from teacher'
                 db_fetch = sql_conn(sql)
@@ -382,10 +389,15 @@ class AdminPage(object):
         Label(query_frame, text='Course ID: ', font=("Arial", 16)).grid(row=0, stick=E + W, pady=10)
         Entry(query_frame, textvariable=self.cid, font=("Arial", 16), width=20).grid(row=0, column=1, stick=E + W,
                                                                                      pady=10)
-        Label(query_frame, text='Course Name: ', font=("Arial", 16)).grid(row=1, stick=E + W, pady=10)
-        Entry(query_frame, textvariable=self.cname, font=("Arial", 16), width=20).grid(row=1, column=1, stick=E + W,
+        Label(query_frame, text=' / Course Name: ', font=("Arial", 16)).grid(row=0, column=2, stick=E + W, pady=10)
+        Entry(query_frame, textvariable=self.cname, font=("Arial", 16), width=20).grid(row=0, column=3, stick=E + W,
                                                                                      pady=10)
+
         def modify(table):
+            if not self.sid.get() or not self.sname.get():
+                showinfo('Error', 'Please input course id or name to modify.')
+                return
+
             window = Toplevel()
             window.title('Modify course info')
             center_window(window, 309, 500)
@@ -402,7 +414,7 @@ class AdminPage(object):
             self.cancelYear.set(db_fetch[5])
 
             Label(window, text='Course ID: ', font=("Arial", 12)).grid(row=1, stick=E + W, pady=10)
-            Entry(window, textvariable=self.cid, font=("Arial", 12), width=12).grid(row=1, column=1, stick=E + W,
+            Label(window, textvariable=self.cid, font=("Arial", 12), width=12).grid(row=1, column=1, stick=E + W,
                                                                                     pady=10)
             Label(window, text='Course Name: ', font=("Arial", 12)).grid(row=2, stick=E + W, pady=10)
             Entry(window, textvariable=self.cname, font=("Arial", 12), width=12).grid(row=2, column=1, stick=E + W,
@@ -445,6 +457,10 @@ class AdminPage(object):
                font=("Arial", 16)).grid(row=2, column=1, stick=W, pady=10)
 
         def delete(table):
+            if not self.sid.get() or not self.sname.get():
+                showinfo('Error', 'Please input course id to delete.')
+                return
+
             sql = 'delete from coursechoosing where courseID="{}"'.format(self.cid.get())
             sql_conn(sql)
 
@@ -541,11 +557,15 @@ class AdminPage(object):
         Label(query_frame, text='Student ID: ', font=("Arial", 16)).grid(row=0, stick=E + W, pady=10)
         Entry(query_frame, textvariable=self.sid, font=("Arial", 16), width=20).grid(row=0, column=1, stick=E + W,
                                                                                      pady=10)
-        Label(query_frame, text=' / Course ID: ', font=("Arial", 16)).grid(row=0, column=2, stick=E + W, pady=10)
+        Label(query_frame, text=' & Course ID: ', font=("Arial", 16)).grid(row=0, column=2, stick=E + W, pady=10)
         Entry(query_frame, textvariable=self.cid, font=("Arial", 16), width=20).grid(row=0, column=3, stick=E + W,
                                                                                      pady=10)
 
         def modify(table):
+            if not self.sid.get() or not self.sname.get():
+                showinfo('Error', 'Please input student id and course id to modify.')
+                return
+
             window = Toplevel()
             window.title('Modify course choosing info')
             center_window(window, 309, 500)
@@ -590,6 +610,10 @@ class AdminPage(object):
                font=("Arial", 16)).grid(row=2, column=1, stick=W, pady=10)
 
         def delete(table):
+            if not self.sid.get() or not self.sname.get():
+                showinfo('Error', 'Please input student id and course id to delete.')
+                return
+
             sql = 'delete from coursechoosing where courseID="{}" and studentID = "{}"'\
                 .format(self.cid.get(), self.sid.get())
             sql_conn(sql)
