@@ -77,7 +77,7 @@ class AdminPage(object):
                                                                                        pady=10)
 
         def modify(table):
-            if not self.sid.get() or not self.sname.get():
+            if not self.sid.get() and not self.sname.get():
                 showinfo('Error', 'Please input student id or name to modify.')
                 return
             window = Toplevel()
@@ -142,7 +142,7 @@ class AdminPage(object):
                font=("Arial", 16)).grid(row=2, column=1, stick=W, pady=10)
 
         def delete(table):
-            if not self.sid.get() or not self.sname.get():
+            if not self.sid.get():
                 showinfo('Error', 'Please input student id to delete.')
                 return
             sql = 'delete from coursechoosing where studentID="{}"'.format(self.sid.get())
@@ -259,7 +259,7 @@ class AdminPage(object):
                                                                                        pady=10)
 
         def modify():
-            if not self.sid.get() or not self.sname.get():
+            if not self.tid.get() and not self.tname.get():
                 showinfo('Error', 'Please input teacher  or name to modify.')
                 return
             window = Toplevel()
@@ -304,7 +304,7 @@ class AdminPage(object):
                font=("Arial", 16)).grid(row=2, column=1, stick=W, pady=10)
 
         def delete():
-            if not self.sid.get() or not self.sname.get():
+            if not self.tid.get():
                 showinfo('Error', 'Please input teacher id to delete.')
                 return
 
@@ -394,7 +394,7 @@ class AdminPage(object):
                                                                                      pady=10)
 
         def modify(table):
-            if not self.sid.get() or not self.sname.get():
+            if not self.cid.get() and not self.cname.get():
                 showinfo('Error', 'Please input course id or name to modify.')
                 return
 
@@ -457,7 +457,7 @@ class AdminPage(object):
                font=("Arial", 16)).grid(row=2, column=1, stick=W, pady=10)
 
         def delete(table):
-            if not self.sid.get() or not self.sname.get():
+            if not self.cid.get():
                 showinfo('Error', 'Please input course id to delete.')
                 return
 
@@ -562,7 +562,7 @@ class AdminPage(object):
                                                                                      pady=10)
 
         def modify(table):
-            if not self.sid.get() or not self.sname.get():
+            if not self.sid.get() or not self.cid.get():
                 showinfo('Error', 'Please input student id and course id to modify.')
                 return
 
@@ -610,7 +610,7 @@ class AdminPage(object):
                font=("Arial", 16)).grid(row=2, column=1, stick=W, pady=10)
 
         def delete(table):
-            if not self.sid.get() or not self.sname.get():
+            if not self.sid.get() or not self.cid.get():
                 showinfo('Error', 'Please input student id and course id to delete.')
                 return
 

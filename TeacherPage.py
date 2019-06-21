@@ -68,22 +68,25 @@ class TeacherPage(object):
                                         db_fetch[i][2], db_fetch[i][3],
                                         db_fetch[i][4], db_fetch[i][5]))
 
-        # query_frame = Frame(self.page)
-        # query_frame.grid(row=2, stick=W, ipady=10, ipadx=10)
-        # Label(query_frame, text='Student ID: ', font=("Arial", 16)).grid(row=0, stick=E + W, pady=10)
-        # Text(query_frame, font=("Arial", 16), width=20, height=1).grid(row=0, column=1, stick=E + W, pady=10)
-        # Label(query_frame, text=' / Student Name: ', font=("Arial", 16)).grid(row=0, column=2, stick=E + W, pady=10)
-        # Text(query_frame, font=("Arial", 16), width=20, height=1).grid(row=0, column=3, stick=E + W, pady=10)
-        # Label(query_frame, text='Course ID: ', font=("Arial", 16)).grid(row=1, stick=E + W, pady=10)
-        # Text(query_frame, font=("Arial", 16), width=20, height=1).grid(row=1, column=1, stick=E + W, pady=10)
-        # Label(query_frame, text=' / Course Name: ', font=("Arial", 16)).grid(row=1, column=2, stick=E + W, pady=10)
-        # Text(query_frame, font=("Arial", 16), width=20, height=1).grid(row=1, column=3, stick=E + W, pady=10)
+        query_frame = Frame(self.page)
+        query_frame.grid(row=2, stick=W, ipady=10, ipadx=10)
+        Label(query_frame, text='Student ID: ', font=("Arial", 16)).grid(row=0, stick=E + W, pady=10)
+        Text(query_frame, font=("Arial", 16), width=20, height=1).grid(row=0, column=1, stick=E + W, pady=10)
+        Label(query_frame, text=' / Student Name: ', font=("Arial", 16)).grid(row=0, column=2, stick=E + W, pady=10)
+        Text(query_frame, font=("Arial", 16), width=20, height=1).grid(row=0, column=3, stick=E + W, pady=10)
+        Label(query_frame, text='Course ID: ', font=("Arial", 16)).grid(row=1, stick=E + W, pady=10)
+        Text(query_frame, font=("Arial", 16), width=20, height=1).grid(row=1, column=1, stick=E + W, pady=10)
+        Label(query_frame, text=' / Course Name: ', font=("Arial", 16)).grid(row=1, column=2, stick=E + W, pady=10)
+        Text(query_frame, font=("Arial", 16), width=20, height=1).grid(row=1, column=3, stick=E + W, pady=10)
+
+        # no_score = False
+        # def if_score():
+        #     no_score = True
         #
-        # score_exist = BooleanVar()
-        # Radiobutton(query_frame, variable=score_exist, text='No scores', value=True,
+        # Checkbutton(query_frame, text='No scores', command=if_score,
         #             font=("Arial", 16)).grid(row=2, column=0, pady=10)
-        # Button(query_frame, text='Search', command='updateFunction',
-        #        font=("Arial", 16)).grid(row=2, column=2, stick=W, pady=10)
+        Button(query_frame, text='Search', command='updateFunction',
+               font=("Arial", 16)).grid(row=2, column=2, stick=W, pady=10)
 
         self.page.pack()
 
