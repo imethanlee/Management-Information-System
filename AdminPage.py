@@ -331,14 +331,17 @@ class AdminPage(object):
         Label(query_frame, text='Course ID: ', font=("Arial", 16)).grid(row=0, stick=E + W, pady=10)
         Entry(query_frame, textvariable=self.cid, font=("Arial", 16), width=20).grid(row=0, column=1, stick=E + W,
                                                                                      pady=10)
-
+        Label(query_frame, text='Course Name: ', font=("Arial", 16)).grid(row=1, stick=E + W, pady=10)
+        Entry(query_frame, textvariable=self.cname, font=("Arial", 16), width=20).grid(row=1, column=1, stick=E + W,
+                                                                                     pady=10)
         def modify(table):
             window = Toplevel()
             window.title('Modify course info')
             center_window(window, 309, 500)
             Label(window).grid(row=0, stick=W)
 
-            sql = 'select * from student where studentID = "{}"'.format(self.cid.get())
+            sql = 'select * from course where courseID="{}" or name="{}"'\
+                .format(self.cid.get(), self.cname.get())
             db_fetch = sql_conn(sql)[0]
             self.cid.set(db_fetch[0])
             self.cname.set(db_fetch[1])
@@ -370,7 +373,10 @@ class AdminPage(object):
 
             def save_new_courses(table):
                 # save to database
-                sql = 'update course set name="FFF" where courseID="c03"'
+                sql = 'update course set name="{}", teacherID="{}", credit="{}", grade="{}", canceledYear="{}" ' \
+                      'where courseID="{}"'\
+                    .format(self.cname.get(), self.tid.get(), self.credit.get(),
+                            self.cgrade.get(), self.cancelYear.get(), self.cid.get())
                 sql_conn(sql)
                 clear_table(table)
                 sql = 'select * from course'
@@ -379,6 +385,7 @@ class AdminPage(object):
                     table.insert('', i, values=(db_fetch[i][0], db_fetch[i][1],
                                                 db_fetch[i][2], db_fetch[i][3],
                                                 db_fetch[i][4], db_fetch[i][5]))
+                window.destroy()
 
             Button(window, text='Save', command=lambda: save_new_courses(table),
                    font=("Arial", 16)).grid(row=8, column=0, stick=E, pady=10)
@@ -387,7 +394,8 @@ class AdminPage(object):
                font=("Arial", 16)).grid(row=2, column=1, stick=W, pady=10)
 
         def delete(table):
-            sql = 'delete from course where courseID = "c03"'
+            sql = 'delete from course where courseID="{}" or name="{}"'\
+                .format(self.cid.get(), self.cname.get())
             sql_conn(sql)
             clear_table(table)
             sql = 'select * from course'
@@ -450,6 +458,7 @@ class AdminPage(object):
                     table.insert('', i, values=(db_fetch[i][0], db_fetch[i][1],
                                                 db_fetch[i][2], db_fetch[i][3],
                                                 db_fetch[i][4], db_fetch[i][5]))
+                window.destroy()
 
             Button(window, text='Save', command=lambda: save_new_courses(table),
                    font=("Arial", 16)).grid(row=8, column=0, stick=E, pady=10)
@@ -464,7 +473,7 @@ class AdminPage(object):
         clear_frame(self.page)
         Label(self.page).grid(row=0, stick=W)
 
-        columns = ('Student ID', 'Student Name', 'Course ID', 'Course Name', 'Chosen Year')
+        columns = ('Student ID', 'CourseID', 'Teacher ID', 'Chosen Year', 'Score')
         table = generate_table(self.page, 1, columns)
 
         sql = 'select * from coursechoosing'
@@ -489,13 +498,12 @@ class AdminPage(object):
             center_window(window, 309, 500)
             Label(window).grid(row=0, stick=W)
 
-            sql = 'select * from student where studentID = "{}"'.format(self.sid.get())
+            sql = 'select * from coursechoosing where studentID="{}" and courseID="{}"'\
+                .format(self.sid.get(), self.cid.get())
             db_fetch = sql_conn(sql)[0]
             self.sid.set(db_fetch[0])
-            self.sname.set(db_fetch[1])
-            self.cid.set(db_fetch[2])
-            self.cname.set(db_fetch[3])
-            self.chosenYear.set(db_fetch[4])
+            self.cid.set(db_fetch[1])
+            self.chosenYear.set(db_fetch[3])
 
             Label(window, text='Student ID: ', font=("Arial", 12)).grid(row=1, stick=E + W, pady=10)
             Entry(window, textvariable=self.sid, font=("Arial", 12), width=12).grid(row=1, column=1, stick=E + W,
@@ -510,7 +518,8 @@ class AdminPage(object):
             Label(window).grid(row=4, stick=W)
 
             def save_new_course_choosing(table):
-                sql = 'update coursechoosing set chosenYear="1999" where studentID="s03" and courseID="c03"'
+                sql = 'update coursechoosing set chosenYear="{}" where studentID="{}" and courseID="{}"'\
+                    .format(self.chosenYear.get(), self.sid.get(), self.cid.get())
                 sql_conn(sql)
                 clear_table(table)
                 sql = 'select * from coursechoosing'
@@ -519,6 +528,7 @@ class AdminPage(object):
                     table.insert('', i, values=(db_fetch[i][0], db_fetch[i][1],
                                                 db_fetch[i][2], db_fetch[i][3],
                                                 db_fetch[i][4]))
+                window.destroy()
 
             Button(window, text='Save', command=lambda: save_new_course_choosing(table),
                    font=("Arial", 16)).grid(row=5, column=0, stick=E, pady=10)
@@ -527,7 +537,8 @@ class AdminPage(object):
                font=("Arial", 16)).grid(row=2, column=1, stick=W, pady=10)
 
         def delete(table):
-            sql = 'delete from coursechoosing where courseID="c03" and studentID = "s03"'
+            sql = 'delete from coursechoosing where courseID="{}" and studentID = "{}"'\
+                .format(self.cid.get(), self.sid.get())
             sql_conn(sql)
             clear_table(table)
             sql = 'select * from coursechoosing'
@@ -557,13 +568,19 @@ class AdminPage(object):
             Label(window, text='Chosen Year: ', font=("Arial", 12)).grid(row=3, stick=E + W, pady=10)
             Entry(window, textvariable=self.chosenYear, font=("Arial", 12), width=12).grid(row=3, column=1, stick=E + W,
                                                                                            pady=10)
-
             Label(window).grid(row=4, stick=W)
 
             def save_new_course_choosing(table):
-                sql = 'insert into coursechoosing(studentID, courseID, teacherID, chosenYear, score) ' \
-                      'values ("s03", "c03", "t02", "2019", "60")'
+
+                sql = 'select teacherID from course where courseID="{}"'\
+                    .format(self.cid.get())
+                tid = sql_conn(sql)[0][0]
+
+                sql = 'insert into coursechoosing(studentID, courseID, teacherID, chosenYear) ' \
+                      'values ("{}", "{}", "{}", "{}")'\
+                    .format(self.sid.get(), self.cid.get(), tid, self.chosenYear.get())
                 sql_conn(sql)
+
                 clear_table(table)
                 sql = 'select * from coursechoosing'
                 db_fetch = sql_conn(sql)
@@ -571,6 +588,7 @@ class AdminPage(object):
                     table.insert('', i, values=(db_fetch[i][0], db_fetch[i][1],
                                                 db_fetch[i][2], db_fetch[i][3],
                                                 db_fetch[i][4]))
+                window.destroy()
 
             Button(window, text='Save', command=lambda: save_new_course_choosing(table),
                    font=("Arial", 16)).grid(row=5, column=0, stick=E, pady=10)
