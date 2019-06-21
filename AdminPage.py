@@ -767,12 +767,12 @@ class AdminPage(object):
         table = generate_table(self.page, 1, columns)
         query_frame = Frame(self.page)
         query_frame.grid(row=2, stick=W, ipady=10, ipadx=10)
-        Label(query_frame, text='Student ID / Student Name: ', font=("Arial", 16)).grid(row=0, stick=E + W, pady=10)
+        Label(query_frame, text='Student ID: ', font=("Arial", 16)).grid(row=0, stick=E + W, pady=10)
         Entry(query_frame, textvariable=self.student, font=("Arial", 16), width=20).grid(row=0, column=1, stick=E + W, pady=10)
         # Label(query_frame, text=' / Student Name: ', font=("Arial", 16)).grid(row=0, column=2, stick=E + W, pady=10)
         # Text(query_frame, font=("Arial", 16), width=20, height=1).grid(row=0, column=3, stick=E + W, pady=10)
 
-        Label(query_frame, text='Course ID / Course Name: ', font=("Arial", 16)).grid(row=1, stick=E + W, pady=10)
+        Label(query_frame, text='Course ID: ', font=("Arial", 16)).grid(row=1, stick=E + W, pady=10)
         Entry(query_frame, textvariable=self.course, font=("Arial", 16), width=20).grid(row=1, column=1, stick=E + W, pady=10)
         # Label(query_frame, text=' / Course Name: ', font=("Arial", 16)).grid(row=1, column=2, stick=E + W, pady=10)
         # Text(query_frame, font=("Arial", 16), width=20, height=1).grid(row=1, column=3, stick=E + W, pady=10)
@@ -784,7 +784,6 @@ class AdminPage(object):
 
         def click7():
             clear_table(table)
-            teacher = self.teacher.get()
             student = self.student.get()
             course = self.course.get()
             clss = self.clss.get()
@@ -793,19 +792,63 @@ class AdminPage(object):
                 sql = 'select avg(coursechoosing.score) from coursechoosing where coursechoosing.studentID="'+student+'"'
                 db_fetch = sql_conn(sql)
                 avg.set(db_fetch[0][0])
+
+                sql = 'select student.studentID, student.Name, course.courseID, course.name, student.class, coursechoosing.score ' \
+                      'from student, course, coursechoosing ' \
+                      'where coursechoosing.studentID=student.studentID and coursechoosing.courseID=course.courseID ' \
+                      'and student.studentID="{}" order by course.courseID asc'\
+                    .format(student)
+                db_fetch = sql_conn(sql)
+                for i in range(len(db_fetch)):
+                    table.insert('', i, values=(db_fetch[i][0], db_fetch[i][1],
+                                                db_fetch[i][2], db_fetch[i][3],
+                                                db_fetch[i][4], db_fetch[i][5]))
             elif len(course) != 0:
                 sql = 'select avg(coursechoosing.score) from coursechoosing where coursechoosing.courseID="'+course+'"'
                 db_fetch = sql_conn(sql)
                 avg.set(db_fetch[0][0])
+
+                sql = 'select student.studentID, student.Name, course.courseID, course.name, student.class, coursechoosing.score ' \
+                      'from student, course, coursechoosing ' \
+                      'where coursechoosing.studentID=student.studentID and coursechoosing.courseID=course.courseID ' \
+                      'and course.courseID="{}" order by student.studentID asc'\
+                    .format(course)
+                db_fetch = sql_conn(sql)
+                for i in range(len(db_fetch)):
+                    table.insert('', i, values=(db_fetch[i][0], db_fetch[i][1],
+                                                db_fetch[i][2], db_fetch[i][3],
+                                                db_fetch[i][4], db_fetch[i][5]))
             elif len(clss) != 0:
                 sql = 'select avg(coursechoosing.score) from coursechoosing, student where ' \
                       'student.class="'+clss+'" and coursechoosing.studentID = student.studentID'
                 db_fetch = sql_conn(sql)
                 avg.set(db_fetch[0][0])
+
+                sql = 'select student.studentID, student.Name, course.courseID, course.name, student.class, coursechoosing.score ' \
+                      'from student, course, coursechoosing ' \
+                      'where coursechoosing.studentID=student.studentID and coursechoosing.courseID=course.courseID ' \
+                      'and student.class="{}" order by student.studentID asc'\
+                    .format(clss)
+                db_fetch = sql_conn(sql)
+                for i in range(len(db_fetch)):
+                    table.insert('', i, values=(db_fetch[i][0], db_fetch[i][1],
+                                                db_fetch[i][2], db_fetch[i][3],
+                                                db_fetch[i][4], db_fetch[i][5]))
             else:
                 sql = 'select avg(coursechoosing.score) from coursechoosing'
                 db_fetch = sql_conn(sql)
                 avg.set(db_fetch[0][0])
+
+                sql = 'select student.studentID, student.Name, course.courseID, course.name, student.class, coursechoosing.score ' \
+                      'from student, course, coursechoosing ' \
+                      'where coursechoosing.studentID=student.studentID and coursechoosing.courseID=course.courseID ' \
+                      'order by student.studentID asc'\
+                    .format(student)
+                db_fetch = sql_conn(sql)
+                for i in range(len(db_fetch)):
+                    table.insert('', i, values=(db_fetch[i][0], db_fetch[i][1],
+                                                db_fetch[i][2], db_fetch[i][3],
+                                                db_fetch[i][4], db_fetch[i][5]))
 
         Button(query_frame, text='Search', command=click7,
                font=("Arial", 16)).grid(row=3, column=1, stick=W, pady=10)
