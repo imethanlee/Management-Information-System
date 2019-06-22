@@ -80,12 +80,15 @@ class AdminPage(object):
             if not self.sid.get() and not self.sname.get():
                 showinfo('Error', 'Please input student id or name to modify.')
                 return
-            window = Toplevel()
-            window.title('Modify student info')
-            center_window(window, 309, 500)
-            Label(window).grid(row=0, stick=W)
+            if self.sid.get() and not re.compile(r'^[0-9]{10}$').match(self.sid.get()):
+                messagebox.showinfo('Error', 'Please input ID number in length of 10.')
+                return
 
             sql = 'select * from student where studentID = "{}" or name="{}"'.format(self.sid.get(), self.sname.get())
+            if not sql_conn(sql):
+                messagebox.showinfo('Error', 'Cannot find the student.')
+                return
+
             db_fetch = sql_conn(sql)[0]
             self.sid.set(db_fetch[0])
             self.sname.set(db_fetch[1])
@@ -93,6 +96,11 @@ class AdminPage(object):
             self.eage.set(db_fetch[3])
             self.eyear.set(db_fetch[4])
             self.clss.set(db_fetch[5])
+
+            window = Toplevel()
+            window.title('Modify student info')
+            center_window(window, 309, 500)
+            Label(window).grid(row=0, stick=W)
 
             Label(window, text='Student ID: ', font=("Arial", 12)).grid(row=1, stick=E + W, pady=10)
             Label(window, textvariable=self.sid, font=("Arial", 12), width=12).grid(row=1, column=1, stick=E + W,
@@ -118,6 +126,10 @@ class AdminPage(object):
             Label(window).grid(row=8, stick=W)
 
             def save_new_student(table):
+                ver = student_verify(self)
+                if not ver:
+                    window.destroy()
+                    return modify(table)
 
                 sql = 'update student set name="{}", sex="{}", entranceAge="{}", ' \
                       'entranceYear="{}", class="{}" where studentID="{}"'\
@@ -145,6 +157,10 @@ class AdminPage(object):
             if not self.sid.get():
                 showinfo('Error', 'Please input student id to delete.')
                 return
+            elif not re.compile(r'^[0-9][0-9][0-9][0-9][0-9][0-9][0-9]$').match(self.sid.get()):
+                messagebox.showinfo('Error', 'Please input ID number in length of 10.')
+                return
+
             sql = 'delete from coursechoosing where studentID="{}"'.format(self.sid.get())
             sql_conn(sql)
             sql = 'delete from user where username="{}"'.format(self.sid.get())
@@ -202,6 +218,10 @@ class AdminPage(object):
             Label(window).grid(row=8, stick=W)
 
             def save_new_student(table):
+                ver = student_verify(self)
+                if not ver:
+                    window.destroy()
+                    return new_student(table)
 
                 sql = 'insert into student(studentID, name, sex, entranceAge, entranceYear, class) ' \
                       'values ("{}", "{}", "{}", "{}", "{}", "{}")' \
