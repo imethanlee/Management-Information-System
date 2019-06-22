@@ -171,8 +171,11 @@ def student_verify(self):
         messagebox.showinfo('Error', 'Please input ID number in length of 10.')
         return False
 
-    sex = re.compile(r'^([Male]|[Female])+$')
-    sex_ver = sex.match(self.sex.get())
+    # sex = re.compile(r'^([Male]|[Female])+$')
+    if self.sex.get() == 'Male' or 'Female':
+        sex_ver = True
+    else:
+        sex_ver = False
     if not sex_ver:
         messagebox.showinfo('Error', 'Please input sex by Male or Female.')
         return False
