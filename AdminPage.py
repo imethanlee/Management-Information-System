@@ -768,6 +768,17 @@ class AdminPage(object):
                     window.wm_attributes("-topmost", 1)
                     return
 
+                sql = 'select entranceYear from student where studentID="{}"' \
+                    .format(self.sid.get())
+                current_grade = int(time.strftime('%Y', time.localtime(time.time()))) - int(sql_conn(sql)[0][0]) + 1
+                sql = 'select grade from course where courseID="{}"' \
+                    .format(self.cid.get())
+                require_grade = int(sql_conn(sql)[0][0])
+                if current_grade < require_grade:
+                    messagebox.showinfo('Error', 'Grade error')
+                    window.wm_attributes("-topmost", 1)
+                    return
+
                 sql = 'select teacherID from course where courseID="{}"'\
                     .format(self.cid.get())
                 tid = sql_conn(sql)[0][0]
