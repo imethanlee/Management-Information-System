@@ -768,6 +768,7 @@ class AdminPage(object):
                     window.wm_attributes("-topmost", 1)
                     return
 
+                # grade checking
                 sql = 'select entranceYear from student where studentID="{}"' \
                     .format(self.sid.get())
                 current_grade = int(time.strftime('%Y', time.localtime(time.time()))) - int(sql_conn(sql)[0][0]) + 1
@@ -776,6 +777,15 @@ class AdminPage(object):
                 require_grade = int(sql_conn(sql)[0][0])
                 if current_grade < require_grade:
                     messagebox.showinfo('Error', 'Grade error')
+                    window.wm_attributes("-topmost", 1)
+                    return
+
+                # canceled year checking
+                sql = 'select cancledYear from course where courseID="{}"'\
+                    .format(self.cid)
+                cancled_year = int(sql_conn(sql)[0][0])
+                if int(time.strftime('%Y', time.localtime(time.time()))) > cancled_year:
+                    messagebox.showinfo('Error', 'The course is now unavailable')
                     window.wm_attributes("-topmost", 1)
                     return
 
