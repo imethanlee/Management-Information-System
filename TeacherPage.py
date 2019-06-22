@@ -9,6 +9,8 @@ class TeacherPage(object):
         self.root = master  # 定义内部变量root
         center_window(self.root, 1000, 618)
         self.create_page()
+        self.student = StringVar()
+        self.course = StringVar()
 
     def create_page(self):
         self.page = Frame(self.root)  # 创建Frame
@@ -70,14 +72,14 @@ class TeacherPage(object):
 
         query_frame = Frame(self.page)
         query_frame.grid(row=2, stick=W, ipady=10, ipadx=10)
-        Label(query_frame, text='Student ID: ', font=("Arial", 16)).grid(row=0, stick=E + W, pady=10)
-        Text(query_frame, font=("Arial", 16), width=20, height=1).grid(row=0, column=1, stick=E + W, pady=10)
-        Label(query_frame, text=' / Student Name: ', font=("Arial", 16)).grid(row=0, column=2, stick=E + W, pady=10)
-        Text(query_frame, font=("Arial", 16), width=20, height=1).grid(row=0, column=3, stick=E + W, pady=10)
-        Label(query_frame, text='Course ID: ', font=("Arial", 16)).grid(row=1, stick=E + W, pady=10)
-        Text(query_frame, font=("Arial", 16), width=20, height=1).grid(row=1, column=1, stick=E + W, pady=10)
-        Label(query_frame, text=' / Course Name: ', font=("Arial", 16)).grid(row=1, column=2, stick=E + W, pady=10)
-        Text(query_frame, font=("Arial", 16), width=20, height=1).grid(row=1, column=3, stick=E + W, pady=10)
+        Label(query_frame, text='Student ID / Name: ', font=("Arial", 16)).grid(row=0, stick=E + W, pady=10)
+        Entry(query_frame, textvariable=self.student, font=("Arial", 16), width=20).grid(row=0, column=1, stick=E + W, pady=10)
+        # Label(query_frame, text=' / Student Name: ', font=("Arial", 16)).grid(row=0, column=2, stick=E + W, pady=10)
+        # Entry(query_frame, font=("Arial", 16), width=20).grid(row=0, column=3, stick=E + W, pady=10)
+        Label(query_frame, text='Course ID / Name: ', font=("Arial", 16)).grid(row=1, stick=E + W, pady=10)
+        Entry(query_frame, textvariable=self.course, font=("Arial", 16), width=20).grid(row=1, column=1, stick=E + W, pady=10)
+        # Label(query_frame, text=' / Course Name: ', font=("Arial", 16)).grid(row=1, column=2, stick=E + W, pady=10)
+        # Entry(query_frame, font=("Arial", 16), width=20).grid(row=1, column=3, stick=E + W, pady=10)
 
         # no_score = False
         # def if_score():
@@ -85,7 +87,57 @@ class TeacherPage(object):
         #
         # Checkbutton(query_frame, text='No scores', command=if_score,
         #             font=("Arial", 16)).grid(row=2, column=0, pady=10)
-        Button(query_frame, text='Search', command='updateFunction',
+
+        def click():
+            clear_table(table)
+            student = self.student.get()
+            course = self.course.get()
+            if len(student) == 0 and len(course) == 0:
+                sql = 'select course.courseID, course.name, student.studentID, student.name, coursechoosing.chosenYear,' \
+                      'coursechoosing.score from course, student, coursechoosing where coursechoosing.teacherID="{}" ' \
+                      'and course.courseID=coursechoosing.courseID and student.studentID=coursechoosing.studentID ' \
+                      'and course.courseID=coursechoosing.courseID and student.studentID=coursechoosing.studentID' \
+                    .format(GlobalVar.login_id)
+                db_fetch = sql_conn(sql)
+                for i in range(len(db_fetch)):
+                    table.insert('', i, values=(db_fetch[i][0], db_fetch[i][1], db_fetch[i][2],
+                                                db_fetch[i][3], db_fetch[i][4], db_fetch[i][5]))
+            elif len(student) != 0 and len(course) == 0:
+                sql = 'select course.courseID, course.name, student.studentID, student.name, coursechoosing.chosenYear,' \
+                      'coursechoosing.score from course, student, coursechoosing where coursechoosing.teacherID="{}" ' \
+                      'and course.courseID=coursechoosing.courseID and student.studentID=coursechoosing.studentID ' \
+                      'and course.courseID=coursechoosing.courseID and student.studentID=coursechoosing.studentID ' \
+                      'and (student.studentID = "{}" or student.name="{}")' \
+                    .format(GlobalVar.login_id, student, student)
+                db_fetch = sql_conn(sql)
+                for i in range(len(db_fetch)):
+                    table.insert('', i, values=(db_fetch[i][0], db_fetch[i][1], db_fetch[i][2],
+                                                db_fetch[i][3], db_fetch[i][4], db_fetch[i][5]))
+            elif len(student) == 0 and len(course) != 0:
+                sql = 'select course.courseID, course.name, student.studentID, student.name, coursechoosing.chosenYear,' \
+                      'coursechoosing.score from course, student, coursechoosing where coursechoosing.teacherID="{}" ' \
+                      'and course.courseID=coursechoosing.courseID and student.studentID=coursechoosing.studentID ' \
+                      'and course.courseID=coursechoosing.courseID and student.studentID=coursechoosing.studentID ' \
+                      'and (course.courseID = "{}" or course.name="{}")' \
+                    .format(GlobalVar.login_id, course, course)
+                db_fetch = sql_conn(sql)
+                for i in range(len(db_fetch)):
+                    table.insert('', i, values=(db_fetch[i][0], db_fetch[i][1], db_fetch[i][2],
+                                                db_fetch[i][3], db_fetch[i][4], db_fetch[i][5]))
+            elif len(student) != 0 and len(course) != 0:
+                sql = 'select course.courseID, course.name, student.studentID, student.name, coursechoosing.chosenYear,' \
+                      'coursechoosing.score from course, student, coursechoosing where coursechoosing.teacherID="{}" ' \
+                      'and course.courseID=coursechoosing.courseID and student.studentID=coursechoosing.studentID ' \
+                      'and course.courseID=coursechoosing.courseID and student.studentID=coursechoosing.studentID ' \
+                      'and (student.studentID = "{}" or student.name="{}")' \
+                      'and (course.courseID = "{}" or course.name="{}")' \
+                    .format(GlobalVar.login_id, student, student, course, course)
+                db_fetch = sql_conn(sql)
+                for i in range(len(db_fetch)):
+                    table.insert('', i, values=(db_fetch[i][0], db_fetch[i][1], db_fetch[i][2],
+                                                db_fetch[i][3], db_fetch[i][4], db_fetch[i][5]))
+
+        Button(query_frame, text='Search', command=click,
                font=("Arial", 16)).grid(row=2, column=2, stick=W, pady=10)
 
         self.page.pack()
