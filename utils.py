@@ -172,10 +172,8 @@ def student_verify(self):
         return False
 
     # sex = re.compile(r'^([Male]|[Female])+$')
-    if self.sex.get() == 'Male' or 'Female':
-        sex_ver = True
-    else:
-        sex_ver = False
+    sex = re.compile(r'^(Male|Female)$')
+    sex_ver = sex.match(self.sex.get())
     if not sex_ver:
         messagebox.showinfo('Error', 'Please input sex by Male or Female.')
         return False
