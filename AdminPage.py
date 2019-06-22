@@ -157,7 +157,7 @@ class AdminPage(object):
             if not self.sid.get():
                 showinfo('Error', 'Please input student id to delete.')
                 return
-            elif not re.compile(r'^[0-9][0-9][0-9][0-9][0-9][0-9][0-9]$').match(self.sid.get()):
+            elif not re.compile(r'^[0-9]{10}$').match(self.sid.get()):
                 messagebox.showinfo('Error', 'Please input ID number in length of 10.')
                 return
 
@@ -240,7 +240,6 @@ class AdminPage(object):
                     table.insert('', i, values=(db_fetch[i][0], db_fetch[i][1],
                                                 db_fetch[i][2], db_fetch[i][3],
                                                 db_fetch[i][4], db_fetch[i][5]))
-                sql_conn(sql)
                 window.destroy()
 
             Button(window, text='Save', command=lambda: save_new_student(table),
