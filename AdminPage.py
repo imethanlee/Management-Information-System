@@ -745,10 +745,10 @@ class AdminPage(object):
             window.title('New student info')
             center_window(window, 309, 500)
             Label(window).grid(row=0, stick=W)
-            Label(window, text='Student ID: ', font=("Arial", 12)).grid(row=1, stick=E + W, pady=10)
+            Label(window, text='Student ID (10 bits): ', font=("Arial", 12)).grid(row=1, stick=E + W, pady=10)
             Entry(window, textvariable=self.sid, font=("Arial", 12), width=12).grid(row=1, column=1, stick=E + W,
                                                                                     pady=10)
-            Label(window, text='Course ID: ', font=("Arial", 12)).grid(row=2, stick=E + W, pady=10)
+            Label(window, text='Course ID (7 bits): ', font=("Arial", 12)).grid(row=2, stick=E + W, pady=10)
             Entry(window, textvariable=self.cid, font=("Arial", 12), width=12).grid(row=2, column=1, stick=E + W,
                                                                                     pady=10)
             Label(window, text='Chosen Year: ', font=("Arial", 12)).grid(row=3, stick=E + W, pady=10)
