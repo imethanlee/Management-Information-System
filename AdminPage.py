@@ -126,10 +126,16 @@ class AdminPage(object):
             Label(window).grid(row=8, stick=W)
 
             def save_new_student(table):
+                window.wm_attributes("-topmost", 0)
                 ver = student_verify(self)
                 if not ver:
-                    window.destroy()
-                    return modify(table)
+                    window.wm_attributes("-topmost", 1)
+                    return
+                sql = 'select * from student where studentID = "{}"'.format(self.sid.get())
+                if sql_conn(sql):
+                    messagebox.showinfo('Error', 'The student has existed.')
+                    window.wm_attributes("-topmost", 1)
+                    return
 
                 sql = 'update student set name="{}", sex="{}", entranceAge="{}", ' \
                       'entranceYear="{}", class="{}" where studentID="{}"'\
@@ -218,10 +224,11 @@ class AdminPage(object):
             Label(window).grid(row=8, stick=W)
 
             def save_new_student(table):
+                window.wm_attributes("-topmost", 0)
                 ver = student_verify(self)
                 if not ver:
-                    window.destroy()
-                    return new_student(table)
+                    window.wm_attributes("-topmost", 1)
+                    return
 
                 sql = 'insert into student(studentID, name, sex, entranceAge, entranceYear, class) ' \
                       'values ("{}", "{}", "{}", "{}", "{}", "{}")' \
@@ -281,11 +288,19 @@ class AdminPage(object):
             if not self.tid.get() and not self.tname.get():
                 showinfo('Error', 'Please input teacher  or name to modify.')
                 return
+            if self.tid.get() and not re.compile(r'^[0-9]{5}$').match(self.tid.get()):
+                messagebox.showinfo('Error', 'Please input ID number in length of 5.')
+                return
+
+            sql = 'select * from teacher where teacherID = "{}" or name="{}"'.format(self.tid.get(), self.tname.get())
+            if not sql_conn(sql):
+                messagebox.showinfo('Error', 'Cannot find the teacher.')
+                return
+
             window = Toplevel()
             window.title('Modify teacher info')
             center_window(window, 309, 500)
 
-            sql = 'select * from teacher where teacherID = "{}" or name="{}"'.format(self.tid.get(), self.tname.get())
             db_fetch = sql_conn(sql)[0]
             self.tid.set(db_fetch[0])
             self.tname.set(db_fetch[1])
@@ -305,6 +320,12 @@ class AdminPage(object):
             Label(window).grid(row=4, stick=W)
 
             def save_new_teacher():
+                window.wm_attributes("-topmost", 0)
+                ver = teacher_verify(self)
+                if not ver:
+                    window.wm_attributes("-topmost", 1)
+                    return
+
                 sql = 'update teacher set name="{}", course="{}" where teacherID="{}"'\
                     .format(self.tname.get(), self.cname.get(), self.tid.get())
                 sql_conn(sql)
@@ -325,6 +346,9 @@ class AdminPage(object):
         def delete():
             if not self.tid.get():
                 showinfo('Error', 'Please input teacher id to delete.')
+                return
+            elif not re.compile(r'^[0-9]{5}$').match(self.tid.get()):
+                messagebox.showinfo('Error', 'Please input ID number in length of 5.')
                 return
 
             sql = 'delete from coursechoosing where teacherID="{}"'.format(self.tid.get())
@@ -348,6 +372,11 @@ class AdminPage(object):
             window = Toplevel()
             window.title('New teacher info')
             center_window(window, 309, 500)
+
+            self.tid.set('')
+            self.tname.set('')
+            self.cname.set('')
+
             Label(window).grid(row=0, stick=W)
             Label(window, text='Teacher ID (5 bits): ', font=("Arial", 12)).grid(row=1, stick=E + W, pady=10)
             Entry(window, textvariable=self.tid, font=("Arial", 12), width=12).grid(row=1, column=1, stick=E + W,
@@ -362,6 +391,17 @@ class AdminPage(object):
             Label(window).grid(row=4, stick=W)
 
             def save_new_teacher():
+                window.wm_attributes("-topmost", 0)
+                ver = teacher_verify(self)
+                if not ver:
+                    window.wm_attributes("-topmost", 1)
+                    return
+                sql = 'select * from teacher where teacherID = "{}"'.format(self.tid.get())
+                if sql_conn(sql):
+                    messagebox.showinfo('Error', 'The teacher has existed.')
+                    window.wm_attributes("-topmost", 1)
+                    return
+
                 sql = 'insert into teacher(teacherID, name, course) ' \
                       'values ("{}", "{}", "{}")' \
                     .format(self.tid.get(), self.tname.get(), self.cname.get())
@@ -416,14 +456,21 @@ class AdminPage(object):
             if not self.cid.get() and not self.cname.get():
                 showinfo('Error', 'Please input course id or name to modify.')
                 return
+            if self.cid.get() and not re.compile(r'^[0-9]{7}$').match(self.cid.get()):
+                messagebox.showinfo('Error', 'Please input ID number in length of 7.')
+                return
+
+            sql = 'select * from course where courseID="{}" or name="{}"' \
+                .format(self.cid.get(), self.cname.get())
+            if not sql_conn(sql):
+                messagebox.showinfo('Error', 'Cannot find the course.')
+                return
 
             window = Toplevel()
             window.title('Modify course info')
             center_window(window, 309, 500)
             Label(window).grid(row=0, stick=W)
 
-            sql = 'select * from course where courseID="{}" or name="{}"'\
-                .format(self.cid.get(), self.cname.get())
             db_fetch = sql_conn(sql)[0]
             self.cid.set(db_fetch[0])
             self.cname.set(db_fetch[1])
@@ -438,7 +485,7 @@ class AdminPage(object):
             Label(window, text='Course Name: ', font=("Arial", 12)).grid(row=2, stick=E + W, pady=10)
             Entry(window, textvariable=self.cname, font=("Arial", 12), width=12).grid(row=2, column=1, stick=E + W,
                                                                                       pady=10)
-            Label(window, text='Teacher ID: ', font=("Arial", 12)).grid(row=3, stick=E + W, pady=10)
+            Label(window, text='Teacher ID (5 bits): ', font=("Arial", 12)).grid(row=3, stick=E + W, pady=10)
             Entry(window, textvariable=self.tid, font=("Arial", 12), width=12).grid(row=3, column=1, stick=E + W,
                                                                                     pady=10)
             Label(window, text='Credit: ', font=("Arial", 12)).grid(row=4, stick=E + W, pady=10)
@@ -454,6 +501,11 @@ class AdminPage(object):
             Label(window).grid(row=7, stick=W)
 
             def save_new_courses(table):
+                window.wm_attributes("-topmost", 0)
+                ver = course_verify(self)
+                if not ver:
+                    window.wm_attributes("-topmost", 1)
+                    return
                 # save to database
                 sql = 'update course set name="{}", teacherID="{}", credit="{}", grade="{}", canceledYear="{}" ' \
                       'where courseID="{}"'\
@@ -478,6 +530,9 @@ class AdminPage(object):
         def delete(table):
             if not self.cid.get():
                 showinfo('Error', 'Please input course id to delete.')
+                return
+            elif not re.compile(r'^[0-9]{7}$').match(self.cid.get()):
+                messagebox.showinfo('Error', 'Please input ID number in length of 7.')
                 return
 
             sql = 'delete from coursechoosing where courseID="{}"'.format(self.cid.get())
@@ -518,7 +573,7 @@ class AdminPage(object):
             Label(window, text='Course Name: ', font=("Arial", 12)).grid(row=2, stick=E + W, pady=10)
             Entry(window, textvariable=self.cname, font=("Arial", 12), width=12).grid(row=2, column=1, stick=E + W,
                                                                                       pady=10)
-            Label(window, text='Teacher ID: ', font=("Arial", 12)).grid(row=3, stick=E + W, pady=10)
+            Label(window, text='Teacher ID (5 bits): ', font=("Arial", 12)).grid(row=3, stick=E + W, pady=10)
             Entry(window, textvariable=self.tid, font=("Arial", 12), width=12).grid(row=3, column=1, stick=E + W,
                                                                                     pady=10)
             Label(window, text='Credit: ', font=("Arial", 12)).grid(row=4, stick=E + W, pady=10)
@@ -533,6 +588,17 @@ class AdminPage(object):
             Label(window).grid(row=7, stick=W)
 
             def save_new_courses(table):
+                window.wm_attributes("-topmost", 0)
+                ver = course_verify(self)
+                if not ver:
+                    window.wm_attributes("-topmost", 1)
+                    return
+                sql = 'select * from course where courseID = "{}"'.format(self.cid.get())
+                if sql_conn(sql):
+                    messagebox.showinfo('Error', 'The course has existed.')
+                    window.wm_attributes("-topmost", 1)
+                    return
+
                 sql = 'insert into course(courseID, name, teacherID, credit, grade, canceledYear) ' \
                       'values ("{}", "{}", "{}", "{}", "{}", "{}")'\
                     .format(self.cid.get(), self.cname.get(), self.tid.get(),
@@ -584,14 +650,24 @@ class AdminPage(object):
             if not self.sid.get() or not self.cid.get():
                 showinfo('Error', 'Please input student id and course id to modify.')
                 return
+            if self.sid.get() and not re.compile(r'^[0-9]{10}$').match(self.sid.get()):
+                messagebox.showinfo('Error', 'Please input student ID number in length of 10.')
+                return
+            if self.cid.get() and not re.compile(r'^[0-9]{7}$').match(self.cid.get()):
+                messagebox.showinfo('Error', 'Please input course ID number in length of 7.')
+                return
+
+            sql = 'select * from coursechoosing where studentID="{}" and courseID="{}"' \
+                .format(self.sid.get(), self.cid.get())
+            if not sql_conn(sql):
+                messagebox.showinfo('Error', 'Cannot find the course choosing.')
+                return
 
             window = Toplevel()
             window.title('Modify course choosing info')
             center_window(window, 309, 500)
             Label(window).grid(row=0, stick=W)
 
-            sql = 'select * from coursechoosing where studentID="{}" and courseID="{}"'\
-                .format(self.sid.get(), self.cid.get())
             db_fetch = sql_conn(sql)[0]
             self.sid.set(db_fetch[0])
             self.cid.set(db_fetch[1])
@@ -610,6 +686,12 @@ class AdminPage(object):
             Label(window).grid(row=4, stick=W)
 
             def save_new_course_choosing(table):
+                window.wm_attributes("-topmost", 0)
+                ver = choose_verify(self)
+                if not ver:
+                    window.wm_attributes("-topmost", 1)
+                    return
+
                 sql = 'update coursechoosing set chosenYear="{}" where studentID="{}" and courseID="{}"'\
                     .format(self.chosenYear.get(), self.sid.get(), self.cid.get())
                 sql_conn(sql)
@@ -631,6 +713,13 @@ class AdminPage(object):
         def delete(table):
             if not self.sid.get() or not self.cid.get():
                 showinfo('Error', 'Please input student id and course id to delete.')
+                return
+
+            if self.sid.get() and not re.compile(r'^[0-9]{10}$').match(self.sid.get()):
+                messagebox.showinfo('Error', 'Please input student ID number in length of 10.')
+                return
+            if self.cid.get() and not re.compile(r'^[0-9]{7}$').match(self.cid.get()):
+                messagebox.showinfo('Error', 'Please input course ID number in length of 7.')
                 return
 
             sql = 'delete from coursechoosing where courseID="{}" and studentID = "{}"'\
@@ -667,6 +756,17 @@ class AdminPage(object):
             Label(window).grid(row=4, stick=W)
 
             def save_new_course_choosing(table):
+                window.wm_attributes("-topmost", 0)
+                ver = choose_verify(self)
+                if not ver:
+                    window.wm_attributes("-topmost", 1)
+                    return
+                sql = 'select * from coursechoosing where studentID="{}" and courseID="{}"' \
+                    .format(self.sid.get(), self.cid.get())
+                if sql_conn(sql):
+                    messagebox.showinfo('Error', 'The course choosing relation has existed.')
+                    window.wm_attributes("-topmost", 1)
+                    return
 
                 sql = 'select teacherID from course where courseID="{}"'\
                     .format(self.cid.get())

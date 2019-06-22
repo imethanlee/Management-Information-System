@@ -96,7 +96,7 @@ def set_cell_value(event, treeview, scene, editcol=None):  # 双击进入编辑�
             # Update to database
             cid = item_text[0]
             sid = item_text[2]
-            value = re.compile(r'^[1-9]?[0-9]+\.?[0-9]?$')
+            value = re.compile(r'^([1-9]?[0-9]\.?[0-9]?)|100|100.0$')
             new_val = entryedit.get(0.0, "end")
             result = value.match(new_val)
             if result:
@@ -105,7 +105,7 @@ def set_cell_value(event, treeview, scene, editcol=None):  # 双击进入编辑�
                                                                                                  'and studentID="' + sid + '"'
                 sql_conn(sql)
             else:
-                messagebox.showinfo('Error', 'Please input a number from 0.0 to 100.0')
+                messagebox.showinfo('Error', 'Please input a number from 0.0 to 100.0.')
 
         entryedit.destroy()
         okb1.destroy()
@@ -171,7 +171,6 @@ def student_verify(self):
         messagebox.showinfo('Error', 'Please input ID number in length of 10.')
         return False
 
-    # sex = re.compile(r'^([Male]|[Female])+$')
     sex = re.compile(r'^(Male|Female)$')
     sex_ver = sex.match(self.sex.get())
     if not sex_ver:
@@ -188,6 +187,92 @@ def student_verify(self):
     eyear_ver = eyear.match(self.eyear.get())
     if not eyear_ver:
         messagebox.showinfo('Error', 'Please input entrance year from 2000 to 2099.')
+        return False
+
+    return True
+
+
+def teacher_verify(self):
+    empty = re.compile(r'^$')
+    blank_ver = empty.match(self.tname.get()) or empty.match(self.tid.get()) or empty.match(self.cname.get())
+    if blank_ver:
+        messagebox.showinfo('Error', 'Please input in every blank.')
+        return False
+
+    id = re.compile(r'^[0-9]{5}$')
+    id_ver = id.match(self.tid.get())
+    if not id_ver:
+        messagebox.showinfo('Error', 'Please input ID number in length of 5.')
+        return False
+
+    return True
+
+
+def course_verify(self):
+    empty = re.compile(r'^$')
+    blank_ver = empty.match(self.cname.get()) or empty.match(self.cid.get()) or empty.match(self.credit.get()) \
+                or empty.match(self.tid.get()) or empty.match(self.cgrade.get())
+    if blank_ver:
+        messagebox.showinfo('Error', 'Please input in every blank except canceled year.')
+        return False
+
+    cid = re.compile(r'^[0-9]{7}$')
+    cid_ver = cid.match(self.cid.get())
+    if not cid_ver:
+        messagebox.showinfo('Error', 'Please input course ID number in length of 7.')
+        return False
+
+    tid = re.compile(r'^[0-9]{5}$')
+    tid_ver = tid.match(self.tid.get())
+    if not tid_ver:
+        messagebox.showinfo('Error', 'Please input teacher ID number in length of 5.')
+        return False
+
+    credit = re.compile(r'^[1-9]?[0-9]\.?[0-9]?$')
+    credit_ver = credit.match(self.credit.get())
+    if not credit_ver:
+        messagebox.showinfo('Error', 'Please input credit from 0.0 to 99.9.')
+        return False
+
+    cgrade = re.compile(r'^[1-9]$')
+    cgrade_ver = cgrade.match(self.cgrade.get())
+    if not cgrade_ver:
+        messagebox.showinfo('Error', 'Please input course grade from 1 to 9.')
+        return False
+
+    if self.cancelYear.get():
+        cyear = re.compile(r'^20[0-9][0-9]$')
+        cyear_ver = cyear.match(self.cancelYear.get())
+        if not cyear_ver:
+            messagebox.showinfo('Error', 'Please input canceled year from 2000 to 2099.')
+            return False
+
+    return True
+
+
+def choose_verify(self):
+    empty = re.compile(r'^$')
+    blank_ver = empty.match(self.cid.get()) or empty.match(self.sid.get()) or empty.match(self.chosenYear.get())
+    if blank_ver:
+        messagebox.showinfo('Error', 'Please input in every blank.')
+        return False
+
+    cid = re.compile(r'^[0-9]{7}$')
+    cid_ver = cid.match(self.cid.get())
+    if not cid_ver:
+        messagebox.showinfo('Error', 'Please input course ID number in length of 7.')
+        return False
+
+    sid = re.compile(r'^[0-9]{10}$')
+    sid_ver = sid.match(self.sid.get())
+    if not sid_ver:
+        messagebox.showinfo('Error', 'Please input student ID number in length of 10.')
+        return False
+
+    cyear = re.compile(r'^20[0-9][0-9]$')
+    cyear_ver = cyear.match(self.chosenYear.get())
+    if not cyear_ver:
+        messagebox.showinfo('Error', 'Please input chosen year from 2000 to 2099.')
         return False
 
     return True
