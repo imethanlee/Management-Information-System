@@ -171,20 +171,22 @@ def student_verify(self):
         messagebox.showinfo('Error', 'Please input ID number in length of 10.')
         return False
 
-    sex = re.compile(r'^[M|Fem][ale]$')
+    sex = re.compile(r'^[M|Fem][ale]+$')
     sex_ver = sex.match(self.sex.get())
     if not sex_ver:
         messagebox.showinfo('Error', 'Please input sex by Male or Female.')
         return False
 
-    eage = re.compile(r'^[1-4][0-9]|50$')
+    eage = re.compile(r'^(50|[1-4][0-9])$')
     eage_ver = eage.match(self.eage.get())
-    if eage_ver:
+    if not eage_ver:
         messagebox.showinfo('Error', 'Please input entrance age from 10 to 50.')
         return False
 
     eyear = re.compile(r'^20[0-9][0-9]$')
-    eyear_ver = eyear.match(self.eage.get())
-    if eyear_ver:
+    eyear_ver = eyear.match(self.eyear.get())
+    if not eyear_ver:
         messagebox.showinfo('Error', 'Please input entrance year from 2000 to 2099.')
         return False
+
+    return True

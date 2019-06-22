@@ -102,7 +102,7 @@ class AdminPage(object):
             center_window(window, 309, 500)
             Label(window).grid(row=0, stick=W)
 
-            Label(window, text='Student ID: ', font=("Arial", 12)).grid(row=1, stick=E + W, pady=10)
+            Label(window, text='Student ID (10 bits): ', font=("Arial", 12)).grid(row=1, stick=E + W, pady=10)
             Label(window, textvariable=self.sid, font=("Arial", 12), width=12).grid(row=1, column=1, stick=E + W,
                                                                                     pady=10)
             Label(window, text='Name: ', font=("Arial", 12)).grid(row=2, stick=E + W, pady=10)
@@ -194,7 +194,7 @@ class AdminPage(object):
             self.eyear.set('')
             self.clss.set('')
 
-            Label(window, text='Student ID: ', font=("Arial", 12)).grid(row=1, stick=E + W, pady=10)
+            Label(window, text='Student ID (10 bits): ', font=("Arial", 12)).grid(row=1, stick=E + W, pady=10)
             Entry(window, textvariable=self.sid, font=("Arial", 12), width=12).grid(row=1, column=1, stick=E + W,
                                                                                     pady=10)
             Label(window, text='Name: ', font=("Arial", 12)).grid(row=2, stick=E + W, pady=10)
@@ -293,7 +293,7 @@ class AdminPage(object):
             self.cname.set(db_fetch[2])
 
             Label(window).grid(row=0, stick=W)
-            Label(window, text='Teacher ID: ', font=("Arial", 12)).grid(row=1, stick=E + W, pady=10)
+            Label(window, text='Teacher ID (5 bits): ', font=("Arial", 12)).grid(row=1, stick=E + W, pady=10)
             Label(window, textvariable=self.tid, font=("Arial", 12), width=12).grid(row=1, column=1, stick=E + W,
                                                                                     pady=10)
             Label(window, text='Teacher Name: ', font=("Arial", 12)).grid(row=2, stick=E + W, pady=10)
@@ -347,10 +347,10 @@ class AdminPage(object):
 
         def new_teacher():
             window = Toplevel()
-            window.title('New student info')
+            window.title('New teacher info')
             center_window(window, 309, 500)
             Label(window).grid(row=0, stick=W)
-            Label(window, text='Teacher ID: ', font=("Arial", 12)).grid(row=1, stick=E + W, pady=10)
+            Label(window, text='Teacher ID (5 bits): ', font=("Arial", 12)).grid(row=1, stick=E + W, pady=10)
             Entry(window, textvariable=self.tid, font=("Arial", 12), width=12).grid(row=1, column=1, stick=E + W,
                                                                                     pady=10)
             Label(window, text='Teacher Name: ', font=("Arial", 12)).grid(row=2, stick=E + W, pady=10)
@@ -433,7 +433,7 @@ class AdminPage(object):
             self.cgrade.set(db_fetch[4])
             self.cancelYear.set(db_fetch[5])
 
-            Label(window, text='Course ID: ', font=("Arial", 12)).grid(row=1, stick=E + W, pady=10)
+            Label(window, text='Course ID (7 bits): ', font=("Arial", 12)).grid(row=1, stick=E + W, pady=10)
             Label(window, textvariable=self.cid, font=("Arial", 12), width=12).grid(row=1, column=1, stick=E + W,
                                                                                     pady=10)
             Label(window, text='Course Name: ', font=("Arial", 12)).grid(row=2, stick=E + W, pady=10)
@@ -513,7 +513,7 @@ class AdminPage(object):
             self.cgrade.set('')
             self.cancelYear.set('')
 
-            Label(window, text='Course ID: ', font=("Arial", 12)).grid(row=1, stick=E + W, pady=10)
+            Label(window, text='Course ID (7 bits): ', font=("Arial", 12)).grid(row=1, stick=E + W, pady=10)
             Entry(window, textvariable=self.cid, font=("Arial", 12), width=12).grid(row=1, column=1, stick=E + W,
                                                                                     pady=10)
             Label(window, text='Course Name: ', font=("Arial", 12)).grid(row=2, stick=E + W, pady=10)
