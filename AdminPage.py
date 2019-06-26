@@ -287,7 +287,7 @@ class AdminPage(object):
 
         def modify():
             if not self.tid.get() and not self.tname.get():
-                showinfo('Error', 'Please input teacher  or name to modify.')
+                showinfo('Error', 'Please input teacher id  or name to modify.')
                 return
             if self.tid.get() and not re.compile(r'^[0-9]{5}$').match(self.tid.get()):
                 messagebox.showinfo('Error', 'Please input ID number in length of 5.')
