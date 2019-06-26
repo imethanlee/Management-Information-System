@@ -860,7 +860,17 @@ class AdminPage(object):
                     table.insert('', i, values=(db_fetch[i][0], db_fetch[i][1],
                                                 db_fetch[i][2], db_fetch[i][3],
                                                 db_fetch[i][4], db_fetch[i][5]))
-
+            elif len(student) == 0 and len(course) != 0:
+                sql = 'select student.studentID, student.name, course.courseID, course.name, course.credit, coursechoosing.score from ' \
+                      'student, course, coursechoosing where ' \
+                      '(coursechoosing.studentID=student.studentID and ' \
+                      'coursechoosing.courseID=course.courseID) and ' \
+                      '(course.courseID="' + course + '" or course.name="' + course + '")'
+                db_fetch = sql_conn(sql)
+                for i in range(len(db_fetch)):
+                    table.insert('', i, values=(db_fetch[i][0], db_fetch[i][1],
+                                                db_fetch[i][2], db_fetch[i][3],
+                                                db_fetch[i][4], db_fetch[i][5]))
             elif len(student) != 0 and len(course) != 0:
                 sql = 'select student.studentID, student.name, course.courseID, course.name, course.credit, coursechoosing.score from ' \
                       'student, course, coursechoosing where ' \
