@@ -4,6 +4,7 @@ from tkinter.ttk import Treeview
 from utils import *
 
 
+
 class AdminPage(object):
     def __init__(self, master=None):
         self.root = master  # 定义内部变量root
@@ -131,11 +132,6 @@ class AdminPage(object):
                 if not ver:
                     window.wm_attributes("-topmost", 1)
                     return
-                sql = 'select * from student where studentID = "{}"'.format(self.sid.get())
-                if sql_conn(sql):
-                    messagebox.showinfo('Error', 'The student has existed.')
-                    window.wm_attributes("-topmost", 1)
-                    return
 
                 sql = 'update student set name="{}", sex="{}", entranceAge="{}", ' \
                       'entranceYear="{}", class="{}" where studentID="{}"'\
@@ -227,6 +223,11 @@ class AdminPage(object):
                 window.wm_attributes("-topmost", 0)
                 ver = student_verify(self)
                 if not ver:
+                    window.wm_attributes("-topmost", 1)
+                    return
+                sql = 'select * from student where studentID = "{}"'.format(self.sid.get())
+                if sql_conn(sql):
+                    messagebox.showinfo('Error', 'The student has existed.')
                     window.wm_attributes("-topmost", 1)
                     return
 
@@ -673,10 +674,10 @@ class AdminPage(object):
             self.cid.set(db_fetch[1])
             self.chosenYear.set(db_fetch[3])
 
-            Label(window, text='Student ID: ', font=("Arial", 12)).grid(row=1, stick=E + W, pady=10)
+            Label(window, text='Student ID (10 bits): ', font=("Arial", 12)).grid(row=1, stick=E + W, pady=10)
             Entry(window, textvariable=self.sid, font=("Arial", 12), width=12).grid(row=1, column=1, stick=E + W,
                                                                                     pady=10)
-            Label(window, text='Course ID: ', font=("Arial", 12)).grid(row=2, stick=E + W, pady=10)
+            Label(window, text='Course ID (7 bits): ', font=("Arial", 12)).grid(row=2, stick=E + W, pady=10)
             Entry(window, textvariable=self.cid, font=("Arial", 12), width=12).grid(row=2, column=1, stick=E + W,
                                                                                     pady=10)
             Label(window, text='Chosen Year: ', font=("Arial", 12)).grid(row=3, stick=E + W, pady=10)
@@ -744,10 +745,10 @@ class AdminPage(object):
             window.title('New student info')
             center_window(window, 309, 500)
             Label(window).grid(row=0, stick=W)
-            Label(window, text='Student ID: ', font=("Arial", 12)).grid(row=1, stick=E + W, pady=10)
+            Label(window, text='Student ID (10 bits): ', font=("Arial", 12)).grid(row=1, stick=E + W, pady=10)
             Entry(window, textvariable=self.sid, font=("Arial", 12), width=12).grid(row=1, column=1, stick=E + W,
                                                                                     pady=10)
-            Label(window, text='Course ID: ', font=("Arial", 12)).grid(row=2, stick=E + W, pady=10)
+            Label(window, text='Course ID (7 bits): ', font=("Arial", 12)).grid(row=2, stick=E + W, pady=10)
             Entry(window, textvariable=self.cid, font=("Arial", 12), width=12).grid(row=2, column=1, stick=E + W,
                                                                                     pady=10)
             Label(window, text='Chosen Year: ', font=("Arial", 12)).grid(row=3, stick=E + W, pady=10)
@@ -765,27 +766,6 @@ class AdminPage(object):
                     .format(self.sid.get(), self.cid.get())
                 if sql_conn(sql):
                     messagebox.showinfo('Error', 'The course choosing relation has existed.')
-                    window.wm_attributes("-topmost", 1)
-                    return
-
-                # grade checking
-                sql = 'select entranceYear from student where studentID="{}"' \
-                    .format(self.sid.get())
-                current_grade = int(time.strftime('%Y', time.localtime(time.time()))) - int(sql_conn(sql)[0][0]) + 1
-                sql = 'select grade from course where courseID="{}"' \
-                    .format(self.cid.get())
-                require_grade = int(sql_conn(sql)[0][0])
-                if current_grade < require_grade:
-                    messagebox.showinfo('Error', 'Grade error')
-                    window.wm_attributes("-topmost", 1)
-                    return
-
-                # canceled year checking
-                sql = 'select cancledYear from course where courseID="{}"'\
-                    .format(self.cid)
-                cancled_year = int(sql_conn(sql)[0][0])
-                if int(time.strftime('%Y', time.localtime(time.time()))) > cancled_year:
-                    messagebox.showinfo('Error', 'The course is now unavailable')
                     window.wm_attributes("-topmost", 1)
                     return
 

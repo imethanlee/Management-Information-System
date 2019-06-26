@@ -11,7 +11,7 @@ class GlobalVar:
         self.login_id = 0
 
 
-def center_window(root, width, height):
+def center_window(root: object, width: object, height: object) -> object:
     screenwidth = root.winfo_screenwidth()
     screenheight = root.winfo_screenheight()
     size = '%dx%d+%d+%d' % (width, height, (screenwidth - width) / 2, (screenheight - height) / 2)
@@ -257,22 +257,44 @@ def choose_verify(self):
         messagebox.showinfo('Error', 'Please input in every blank.')
         return False
 
-    cid = re.compile(r'^[0-9]{7}$')
-    cid_ver = cid.match(self.cid.get())
-    if not cid_ver:
-        messagebox.showinfo('Error', 'Please input course ID number in length of 7.')
-        return False
-
     sid = re.compile(r'^[0-9]{10}$')
     sid_ver = sid.match(self.sid.get())
     if not sid_ver:
         messagebox.showinfo('Error', 'Please input student ID number in length of 10.')
         return False
 
+    cid = re.compile(r'^[0-9]{7}$')
+    cid_ver = cid.match(self.cid.get())
+    if not cid_ver:
+        messagebox.showinfo('Error', 'Please input course ID number in length of 7.')
+        return False
+
     cyear = re.compile(r'^20[0-9][0-9]$')
     cyear_ver = cyear.match(self.chosenYear.get())
     if not cyear_ver:
         messagebox.showinfo('Error', 'Please input chosen year from 2000 to 2099.')
+        return False
+
+    current_year = int(time.strftime('%Y', time.localtime(time.time())))
+    # grade checking
+    sql = 'select entranceYear from student where studentID="{}"' \
+        .format(self.sid.get())
+    current_grade = current_year - int(sql_conn(sql)[0][0]) + 1
+    sql = 'select grade from course where courseID="{}"' \
+        .format(self.cid.get())
+    require_grade = int(sql_conn(sql)[0][0])
+    if current_grade < require_grade:
+        messagebox.showinfo('Error', 'The student\'s grade {} does not meet the course\'s grade {}.'
+                            .format(current_grade, require_grade))
+        return False
+
+    # canceled year checking
+    sql = 'select canceledYear from course where courseID="{}"' \
+        .format(self.cid.get())
+    canceled_year = int(sql_conn(sql)[0][0])
+    if int(self.chosenYear.get()) > canceled_year:
+        messagebox.showinfo('Error', 'The choosing year {} is later than the canceled year {}.'
+                            .format(int(self.chosenYear.get()), canceled_year))
         return False
 
     return True
